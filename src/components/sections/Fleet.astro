@@ -1,0 +1,69 @@
+---
+import { fleet } from '@/data/fleet';
+---
+
+<section id="fleet" class="py-20 lg:py-30 bg-dark">
+  <div class="max-w-[var(--container-max-width)] mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="max-w-2xl mb-16">
+      <span class="text-accent text-sm font-semibold uppercase tracking-widest">Техника</span>
+      <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold mt-3 mb-6">НАШ АВТОПАРК</h2>
+      <p class="text-gray-sub text-lg lg:text-xl leading-relaxed">
+        11 единиц техники. Все — полный привод 6×6. Готовы к&nbsp;работе в&nbsp;любых условиях.
+      </p>
+    </div>
+
+    <!-- Fleet Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {fleet.map((vehicle) => (
+        <article class="group bg-card rounded-2xl overflow-hidden border border-white/5 hover:border-accent/30 transition-all duration-300 hover:translate-y-[-4px] hover:shadow-xl hover:shadow-accent/5">
+          <!-- Vehicle Image -->
+          <div class="relative h-48 lg:h-56 bg-dark-lighter overflow-hidden">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <!-- Placeholder icon when no image -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20 text-white/10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 17h8M8 17v-4m8 4v-4m-8 0h8m-8 0V9m8 4V9m-8 0h8M8 9V5a1 1 0 011-1h6a1 1 0 011 1v4" />
+              </svg>
+            </div>
+            {vehicle.count > 1 && (
+              <div class="absolute top-4 right-4 bg-accent text-white text-xs font-bold px-3 py-1 rounded-full">
+                {vehicle.count} шт.
+              </div>
+            )}
+            {vehicle.type && (
+              <div class="absolute top-4 left-4 bg-white/10 backdrop-blur-sm text-white text-xs font-medium px-3 py-1 rounded-full">
+                {vehicle.type}
+              </div>
+            )}
+          </div>
+
+          <!-- Vehicle Info -->
+          <div class="p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <h3 class="text-xl font-bold text-white group-hover:text-accent transition-colors">{vehicle.name}</h3>
+                <p class="text-gray-sub text-sm mt-1">{vehicle.year}</p>
+              </div>
+            </div>
+
+            <!-- Specs -->
+            <div class="grid grid-cols-3 gap-3">
+              <div class="bg-dark/50 rounded-xl p-3 text-center">
+                <div class="text-accent font-bold text-lg">{vehicle.capacity}</div>
+                <div class="text-gray-sub text-xs mt-0.5">тонн</div>
+              </div>
+              <div class="bg-dark/50 rounded-xl p-3 text-center">
+                <div class="text-accent font-bold text-lg">{vehicle.volume}</div>
+                <div class="text-gray-sub text-xs mt-0.5">м&sup3;</div>
+              </div>
+              <div class="bg-dark/50 rounded-xl p-3 text-center">
+                <div class="text-accent font-bold text-lg">{vehicle.drive}</div>
+                <div class="text-gray-sub text-xs mt-0.5">привод</div>
+              </div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

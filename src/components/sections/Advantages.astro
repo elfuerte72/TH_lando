@@ -1,0 +1,55 @@
+---
+import { stats, advantages } from '@/data/stats';
+
+const iconPaths: Record<string, string> = {
+  calendar: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
+  truck: 'M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2-1 2 1 2-1 2 1zm0 0l2-1 2 1 2-1 2 1V6a1 1 0 00-1-1h-2a1 1 0 00-1 1v10',
+  clock: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+  shield: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+  satellite: 'M9.348 14.651a3.75 3.75 0 010-5.303m5.304 0a3.75 3.75 0 010 5.303m-7.425 2.122a6.75 6.75 0 010-9.546m9.546 0a6.75 6.75 0 010 9.546M5.106 18.894c-3.808-3.808-3.808-9.98 0-13.789m13.788 0c3.808 3.808 3.808 9.981 0 13.79M12 12h.008v.007H12V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z',
+};
+---
+
+<section id="advantages" class="py-20 lg:py-30 bg-dark">
+  <div class="max-w-[var(--container-max-width)] mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <span class="text-accent text-sm font-semibold uppercase tracking-widest">Преимущества</span>
+      <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold mt-3">ПОЧЕМУ ТРАК ХОЛДИНГ</h2>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mb-20">
+      {stats.map((stat) => (
+        <div class="bg-card border border-white/5 rounded-2xl p-6 lg:p-8 text-center hover:border-accent/30 transition-all duration-300 group">
+          <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-accent/20 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d={iconPaths[stat.icon] || iconPaths.truck} />
+            </svg>
+          </div>
+          <div class="text-3xl lg:text-4xl font-bold text-white mb-2 stat-value" data-value={stat.value}>
+            {stat.value}
+          </div>
+          <div class="text-gray-sub text-sm">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Advantages List -->
+    <div class="bg-card border border-white/5 rounded-2xl p-8 lg:p-12">
+      <h3 class="text-2xl lg:text-3xl font-bold mb-8">Наши сильные стороны</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {advantages.map((advantage) => (
+          <div class="flex items-start gap-4 p-4 rounded-xl hover:bg-dark/50 transition-colors">
+            <div class="flex-shrink-0 w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center mt-0.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <span class="text-white/90 text-lg leading-relaxed">{advantage}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
