@@ -1,19 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors — Industrial Premium palette */
-  --color-dark: #111827;
-  --color-dark-lighter: #1E293B;
+  /* Colors — Cinematic Industrial palette */
+  --color-dark: #0a0a0d;
+  --color-dark-lighter: #111214;
+  --color-dark-card: #1a1b1f;
   --color-accent: #1D7ACC;
   --color-accent-hover: #2591E5;
-  --color-white: #FFFFFF;
-  --color-gray-sub: #94A3B8;
-  --color-card: #1E293B;
-  --color-card-hover: #253349;
+  --color-accent-glow: rgba(29, 122, 204, 0.15);
+  --color-white: #f0f0f0;
+  --color-gray-sub: #a0a0a8;
+  --color-gray-dim: #6b6b73;
+  --color-card: #1a1b1f;
+  --color-card-hover: #222328;
+  --color-border: rgba(255, 255, 255, 0.06);
 
   /* Fonts */
-  --font-heading: "Inter", "Segoe UI", system-ui, sans-serif;
-  --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-heading: "Barlow Condensed", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
 
   /* Container */
   --container-max-width: 1280px;
@@ -40,10 +44,149 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 /* Selection */
 ::selection {
   background-color: var(--color-accent);
-  color: var(--color-white);
+  color: #fff;
+}
+
+/* ── Grain noise overlay (cinematic texture) ── */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ── Hero text reveal animation ── */
+.reveal-line {
+  overflow: hidden;
+  display: block;
+}
+
+.reveal-line > span {
+  display: inline-block;
+  transform: translateY(110%);
+  animation: revealUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.reveal-line:nth-child(2) > span {
+  animation-delay: 0.15s;
+}
+
+@keyframes revealUp {
+  to { transform: translateY(0); }
+}
+
+/* ── Hero fade-in elements ── */
+.hero-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroFadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.hero-fade-1 { animation-delay: 0.3s; }
+.hero-fade-2 { animation-delay: 0.5s; }
+.hero-fade-3 { animation-delay: 0.7s; }
+.hero-fade-4 { animation-delay: 0.9s; }
+.hero-fade-5 { animation-delay: 1.1s; }
+
+@keyframes heroFadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── CTA glow pulse ── */
+.cta-glow {
+  box-shadow: 0 0 20px var(--color-accent-glow),
+              0 0 60px rgba(29, 122, 204, 0.08);
+  transition: all 0.3s ease;
+}
+
+.cta-glow:hover {
+  box-shadow: 0 0 30px rgba(29, 122, 204, 0.35),
+              0 0 80px rgba(29, 122, 204, 0.15);
+}
+
+/* ── Scroll-driven parallax (Chromium) ── */
+@supports (animation-timeline: scroll()) {
+  .hero-video {
+    animation: parallaxZoom linear;
+    animation-timeline: scroll();
+    animation-range: 0% 60%;
+  }
+
+  @keyframes parallaxZoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.12) translateY(-5%); }
+  }
+
+  .hero-content {
+    animation: fadeUpOnScroll linear;
+    animation-timeline: scroll();
+    animation-range: 0% 35%;
+  }
+
+  @keyframes fadeUpOnScroll {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-50px); }
+  }
+}
+
+/* ── Section scroll reveals ── */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Letterbox cinematic bars (disabled — kept for reference) ── */
+
+/* ── Accent animated line ── */
+@keyframes accentSweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.accent-sweep {
+  overflow: hidden;
+}
+
+.accent-sweep::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+  animation: accentSweep 4s ease-in-out infinite;
+}
+
+/* ── Header transitions ── */
+#header {
+  transition: background 0.4s ease, backdrop-filter 0.4s ease, height 0.3s ease;
+}
+
+#header .header-inner {
+  transition: height 0.3s ease;
+  height: 80px;
+}
+
+#header.scrolled .header-inner {
+  height: 64px;
 }
