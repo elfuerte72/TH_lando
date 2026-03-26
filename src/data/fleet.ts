@@ -1,0 +1,50 @@
+import type { Vehicle } from '../types';
+
+export const fleet: Vehicle[] = [
+  {
+    name: 'SHACMAN X3000',
+    year: '2022–2023',
+    capacity: 30,
+    volume: 19,
+    drive: '6×6',
+    count: 6,
+    image: '/images/fleet/shacman-x3000.webp',
+  },
+  {
+    name: 'МАЗ 6514',
+    year: '2019',
+    capacity: 25,
+    volume: 16,
+    drive: '6×6',
+    count: 2,
+    image: '/images/fleet/maz-6514.webp',
+  },
+  {
+    name: 'VOLVO FMX',
+    year: '2019',
+    capacity: 25,
+    volume: 16,
+    drive: '6×6',
+    count: 1,
+    image: '/images/fleet/volvo-fmx.webp',
+  },
+  {
+    name: 'КАМАЗ 6522',
+    year: '2021',
+    capacity: 25,
+    volume: 16,
+    drive: '6×6',
+    count: 1,
+    image: '/images/fleet/kamaz-6522.webp',
+  },
+  {
+    name: 'УРАЛ NEXT 4320',
+    type: 'АВТОЦИСТЕРНА',
+    year: '2023',
+    capacity: 10,
+    volume: 10,
+    drive: '6×6',
+    count: 1,
+    image: '/images/fleet/ural-next-4320.webp',
+  },
+];

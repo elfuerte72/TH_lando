@@ -1,0 +1,22 @@
+{
+  "name": "trak-holding-landing",
+  "version": "1.0.0",
+  "description": "Landing page for Trak Holding LLC — bulk cargo transportation",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@astrojs/check": "^0.9.8",
+    "@tailwindcss/vite": "^4.2.2",
+    "astro": "^6.1.0",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.9.3"
+  }
+}

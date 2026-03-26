@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors — Industrial Premium palette */
+  --color-dark: #111827;
+  --color-dark-lighter: #1E293B;
+  --color-accent: #1D7ACC;
+  --color-accent-hover: #2591E5;
+  --color-white: #FFFFFF;
+  --color-gray-sub: #94A3B8;
+  --color-card: #1E293B;
+  --color-card-hover: #253349;
+
+  /* Fonts */
+  --font-heading: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+
+  /* Container */
+  --container-max-width: 1280px;
+
+  /* Spacing scale extensions */
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-30: 7.5rem;
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-dark);
+  color: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
