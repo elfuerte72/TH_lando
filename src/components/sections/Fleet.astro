@@ -1,165 +1,221 @@
 ---
 import { fleet } from '@/data/fleet';
+
+const specsData = [
+  {
+    rows: [
+      ['Колёсная формула', '6×6'],
+      ['Двигатель', 'Weichai WP12.430E50'],
+      ['Мощность', '430 л.с. (316 кВт)'],
+      ['Крутящий момент', '2 060 Нм'],
+      ['Коробка передач', '12JSDX220TA-B, 12 ступеней'],
+      ['Грузоподъёмность', '19,6 т'],
+      ['Объём кузова', '19,3 м³'],
+      ['Полная масса', '31 000 кг'],
+      ['Габариты (Д×Ш×В)', '8 480 × 2 550 × 3 650 мм'],
+      ['Шины', '315/80R22.5'],
+      ['Макс. скорость', '100 км/ч'],
+      ['Топливный бак', '500 л'],
+    ],
+  },
+  {
+    rows: [
+      ['Колёсная формула', '6×6'],
+      ['Двигатель', 'ЯМЗ-652, Common Rail'],
+      ['Мощность', '412 л.с. (303 кВт)'],
+      ['Крутящий момент', '1 870 Нм'],
+      ['Коробка передач', '12JS200TA, 12 ступеней'],
+      ['Грузоподъёмность', '26,5 т'],
+      ['Объём кузова', '16,5 м³'],
+      ['Полная масса', '42 000 кг'],
+      ['Габариты (Д×Ш×В)', '8 600 × 2 550 × 3 300 мм'],
+      ['Шины', '12.00 R24'],
+      ['Макс. скорость', '85 км/ч'],
+      ['Топливный бак', '500 л'],
+    ],
+  },
+  {
+    rows: [
+      ['Колёсная формула', '6×6'],
+      ['Двигатель', 'КАМАЗ-740.735-400, V8'],
+      ['Мощность', '400 л.с. (294 кВт)'],
+      ['Крутящий момент', '1 766 Нм'],
+      ['Коробка передач', 'ZF 16S1820TO, 16 ступеней'],
+      ['Грузоподъёмность', '19,07 т'],
+      ['Объём кузова', '16 м³'],
+      ['Полная масса', '33 100 кг'],
+      ['Габариты (Д×Ш×В)', '7 880 × 2 500 × 3 280 мм'],
+      ['Шины', '12.00 R20'],
+      ['Макс. скорость', '90 км/ч'],
+      ['Топливный бак', '350 л'],
+    ],
+  },
+  {
+    rows: [
+      ['Колёсная формула', '6×6'],
+      ['Двигатель', 'Volvo D13K, 6 цил., 12.8 л'],
+      ['Мощность', '500 л.с. (368 кВт)'],
+      ['Крутящий момент', '2 500 Нм'],
+      ['Коробка передач', 'Volvo I-Shift, 12 ступеней'],
+      ['Грузоподъёмность', '25 т'],
+      ['Объём кузова', '16 м³'],
+      ['Полная масса', '33 000 кг'],
+      ['Габариты (Д×Ш×В)', '8 400 × 2 550 × 3 350 мм'],
+      ['Шины', '315/80R22.5'],
+      ['Макс. скорость', '90 км/ч'],
+      ['Топливный бак', '400 л'],
+    ],
+  },
+];
 ---
 
-<section id="fleet" class="relative py-20 lg:py-30 bg-dark overflow-hidden">
-  <div class="max-w-[var(--container-max-width)] mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Section Header with truck image -->
-    <div class="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 mb-16 lg:mb-20">
-      <div class="max-w-2xl relative z-10">
-        <span class="fleet-label text-accent text-sm font-semibold uppercase tracking-widest inline-flex items-center gap-3">
-          <span class="w-8 h-px bg-accent"></span>
-          Техника
+<section id="fleet" class="fleet-section relative py-20 lg:py-32 overflow-hidden">
+  <!-- Dot grid -->
+  <div class="absolute inset-0 pointer-events-none" style="background-image: radial-gradient(circle, rgba(29, 122, 204, 0.07) 1px, transparent 1px); background-size: 32px 32px;"></div>
+
+  <!-- Spotlight -->
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px]" style="background: radial-gradient(ellipse at 50% 60%, rgba(29,122,204,0.08) 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, rgba(29,122,204,0.1) 0%, transparent 30%);"></div>
+  </div>
+
+  <div class="relative z-10 max-w-[var(--container-max-width)] mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Header + Thumbnails centered -->
+    <div class="text-center mb-10 lg:mb-14">
+      <span class="fleet-label text-accent text-sm font-semibold uppercase tracking-widest inline-flex items-center gap-3 justify-center">
+        <span class="w-8 h-px bg-accent"></span>
+        Техника
+        <span class="w-8 h-px bg-accent"></span>
+      </span>
+      <h2 class="text-5xl sm:text-6xl lg:text-7xl font-black mt-4 leading-[0.9]">
+        <span class="fleet-title-line block overflow-hidden">
+          <span class="inline-block">НАШ <span class="text-accent">АВТОПАРК</span></span>
         </span>
-        <h2 class="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black mt-4 mb-6 leading-[0.9]">
-          <span class="fleet-title-line block overflow-hidden">
-            <span class="inline-block">НАШ</span>
-          </span>
-          <span class="fleet-title-line block overflow-hidden">
-            <span class="inline-block text-accent">АВТОПАРК</span>
-          </span>
-        </h2>
-        <p class="fleet-subtitle text-gray-sub text-lg lg:text-xl leading-relaxed max-w-lg">
-          <span class="text-white font-semibold">11 единиц</span> техники. Все — полный привод 6×6.
-          Готовы к&nbsp;работе в&nbsp;любых условиях.
-        </p>
+      </h2>
+
+      <!-- Thumbnail nav — under heading -->
+      <div class="flex items-center justify-center gap-4 lg:gap-5 mt-8">
+        {fleet.map((vehicle, i) => (
+          <button
+            class:list={[
+              'fleet-thumb relative w-20 h-14 lg:w-24 lg:h-16 rounded-xl border-2 overflow-hidden transition-all duration-300',
+              i === 0
+                ? 'border-accent/50 bg-accent/5 scale-110'
+                : 'border-white/[0.06] bg-white/[0.02] opacity-40 hover:opacity-70 hover:border-white/20'
+            ]}
+            data-thumb={i}
+            aria-label={`Показать ${vehicle.name}`}
+          >
+            <img src={vehicle.image} alt={vehicle.name} class="w-full h-full object-contain p-1" loading="lazy" />
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- ═══ SPOTLIGHT STAGE ═══ -->
+    <div class="relative" id="fleet-stage">
+
+
+      <!-- Vehicle Display -->
+      <div class="relative flex items-center min-h-[260px] sm:min-h-[340px] lg:min-h-[420px]">
+
+        <!-- Slides -->
+        <div id="fleet-slides" class="relative w-full max-w-3xl mx-auto">
+          {fleet.map((vehicle, i) => (
+            <div
+              class:list={['fleet-slide flex flex-col items-center', i === 0 ? 'relative' : 'absolute inset-0']}
+              data-index={i}
+              style={i !== 0 ? 'opacity: 0; visibility: hidden;' : ''}
+            >
+              <div class="relative w-full flex items-center justify-center">
+                <img src={vehicle.image} alt={vehicle.name} class="w-full max-w-2xl h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.4)]" loading={i === 0 ? 'eager' : 'lazy'} />
+              </div>
+            </div>
+          ))}
+        </div>
+
       </div>
 
-      <!-- Truck image — right side, blended into background -->
-      <div class="hidden lg:block absolute -right-4 top-1/2 -translate-y-[45%] w-[650px] xl:w-[800px] h-[450px] xl:h-[500px] pointer-events-none">
-        <img src="/images/fleet/fleet-bg.jpg" alt="" class="w-full h-full object-cover object-center scale-120" style="mask-image: radial-gradient(ellipse 70% 65% at 65% 50%, rgba(0,0,0,0.9) 25%, transparent 65%); -webkit-mask-image: radial-gradient(ellipse 70% 65% at 65% 50%, rgba(0,0,0,0.9) 25%, transparent 65%);" loading="lazy" />
+      <!-- Vehicle Info -->
+      <div class="text-center mt-2 lg:mt-4">
+        <h3 id="fleet-name" class="text-3xl sm:text-4xl lg:text-5xl font-black text-white">{fleet[0].name}</h3>
+        <p id="fleet-desc" class="text-gray-sub text-base max-w-md mx-auto mt-3 leading-relaxed">{fleet[0].description}</p>
+        <div id="fleet-meta" class="flex items-center justify-center gap-3 mt-3 flex-wrap">
+          <span id="fleet-year" class="text-gray-dim text-sm">{fleet[0].year}</span>
+          <span class="text-white/10">|</span>
+          <span id="fleet-count" class="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider" style={fleet[0].count <= 1 ? 'display:none' : ''}>
+            <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+            <span class="text-accent">{fleet[0].count} ЕДИНИЦ</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Specs line -->
+      <div id="fleet-specs" class="flex items-center justify-center gap-0 mt-8 max-w-3xl mx-auto">
+        <div class="fleet-spec flex-1 text-center py-3">
+          <div id="spec-capacity" class="text-white font-black text-3xl lg:text-4xl" style="font-variant-numeric: tabular-nums;">{fleet[0].capacity}</div>
+          <div class="text-gray-dim text-[11px] mt-1 uppercase tracking-[0.15em]">тонн</div>
+        </div>
+        <div class="w-px h-10 bg-white/[0.06]"></div>
+        <div class="fleet-spec flex-1 text-center py-3">
+          <div id="spec-volume" class="text-white font-black text-3xl lg:text-4xl" style="font-variant-numeric: tabular-nums;">{fleet[0].volume}</div>
+          <div class="text-gray-dim text-[11px] mt-1 uppercase tracking-[0.15em]">м&sup3;</div>
+        </div>
+        <div class="w-px h-10 bg-white/[0.06]"></div>
+        <div class="fleet-spec flex-1 text-center py-3">
+          <div id="spec-drive" class="text-white font-black text-3xl lg:text-4xl">{fleet[0].drive}</div>
+          <div class="text-gray-dim text-[11px] mt-1 uppercase tracking-[0.15em]">привод</div>
+        </div>
+        <div class="w-px h-10 bg-white/[0.06]"></div>
+        <div class="fleet-spec flex-1 text-center py-3">
+          <div id="spec-engine" class="text-accent font-bold text-lg lg:text-xl">430 л.с.</div>
+          <div class="text-gray-dim text-[11px] mt-1 uppercase tracking-[0.15em]">мощность</div>
+        </div>
+        <div class="w-px h-10 bg-white/[0.06]"></div>
+        <div class="fleet-spec flex-1 text-center py-3">
+          <div id="spec-gross" class="text-white font-black text-3xl lg:text-4xl" style="font-variant-numeric: tabular-nums;">{fleet[0].grossWeight}</div>
+          <div class="text-gray-dim text-[11px] mt-1 uppercase tracking-[0.15em]">масса, т</div>
+        </div>
+      </div>
+
+      <!-- Specs button -->
+      <div class="text-center mt-6">
+        <button id="fleet-specs-btn" class="inline-flex items-center gap-2 text-accent text-sm font-semibold uppercase tracking-wider hover:text-accent-hover transition-colors group">
+          <span>Характеристики</span>
+          <svg id="fleet-specs-chevron" class="w-4 h-4 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Full specs panel (hidden by default) -->
+      <div id="fleet-specs-panel" class="overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+        <div class="max-w-2xl mx-auto mt-6 rounded-2xl border border-white/[0.06] overflow-hidden" style="background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);">
+          <div class="p-6 lg:p-8">
+            <h4 class="text-white font-bold text-sm uppercase tracking-widest mb-5">Технические характеристики</h4>
+            {specsData.map((spec, i) => (
+              <table
+                class:list={['fleet-specs-table w-full', i === 0 ? '' : 'hidden']}
+                data-spec-index={i}
+              >
+                <tbody>
+                  {spec.rows.map((row, ri) => (
+                    <tr class={`border-b border-white/[0.04] ${ri === spec.rows.length - 1 ? 'border-b-0' : ''}`}>
+                      <td class="py-3 text-gray-sub text-sm">{row[0]}</td>
+                      <td class="py-3 text-white text-sm font-medium text-right">{row[1]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Fleet Grid — featured + grid layout -->
-    <div class="fleet-grid grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8">
-      {fleet.slice(0, 2).map((vehicle, index) => (
-        <article class="fleet-card group" data-index={index}>
-          <div class="fleet-card-inner relative bg-card rounded-3xl overflow-hidden border border-white/5 h-full transition-all duration-500 hover:border-accent/40">
-            <!-- Vehicle Image Area — tall for featured -->
-            <div class="relative h-72 sm:h-80 lg:h-96 overflow-hidden bg-dark-lighter">
-              <div class="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent z-10"></div>
-              <div class="absolute inset-0 flex items-center justify-center">
-                <div class="relative">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-36 h-36 text-white/[0.06]" fill="currentColor" viewBox="0 0 640 512">
-                    <path d="M48 0C21.5 0 0 21.5 0 48V368c0 26.5 21.5 48 48 48H64c0 53 43 96 96 96s96-43 96-96H384c0 53 43 96 96 96s96-43 96-96h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V288 256 237.3c0-17-6.7-33.3-18.7-45.3L512 118.6c-12-12-28.3-18.7-45.3-18.7H416V48c0-26.5-21.5-48-48-48H48zM416 160h50.7L544 237.3V256H416V160zM208 416a48 48 0 1 1-96 0 48 48 0 1 1 96 0zm272 48a48 48 0 1 1 0-96 48 48 0 1 1 0 96z"/>
-                  </svg>
-                  <div class="absolute inset-0 blur-3xl bg-accent/10 rounded-full scale-150"></div>
-                </div>
-              </div>
-              <!-- Badges -->
-              {vehicle.type && (
-                <div class="absolute top-5 left-5 z-20 bg-white/10 backdrop-blur-md text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/10">
-                  {vehicle.type}
-                </div>
-              )}
-              {vehicle.count > 1 && (
-                <div class="absolute top-5 right-5 z-20 bg-accent text-white text-sm font-bold w-11 h-11 rounded-full flex items-center justify-center shadow-lg shadow-accent/30">
-                  ×{vehicle.count}
-                </div>
-              )}
-              <!-- Vehicle number watermark -->
-              <div class="absolute bottom-2 right-6 z-20 text-[140px] font-black leading-none text-white/[0.03] select-none pointer-events-none">
-                {String(index + 1).padStart(2, '0')}
-              </div>
-              <!-- Info overlay at bottom of image -->
-              <div class="absolute bottom-0 left-0 right-0 z-20 p-6 lg:p-8">
-                <h3 class="text-2xl lg:text-3xl font-bold text-white group-hover:text-accent transition-colors duration-300">{vehicle.name}</h3>
-                <p class="text-gray-dim text-sm mt-1 flex items-center gap-2">
-                  <span class="w-4 h-px bg-gray-dim"></span>
-                  {vehicle.year}
-                </p>
-              </div>
-            </div>
-            <!-- Specs Row -->
-            <div class="p-6 lg:p-8 pt-4 lg:pt-5">
-              <div class="grid grid-cols-3 gap-3">
-                <div class="bg-dark/60 rounded-2xl p-4 text-center border border-white/[0.03] hover:border-accent/20 transition-colors duration-300">
-                  <div class="text-accent font-bold text-2xl lg:text-3xl">{vehicle.capacity}</div>
-                  <div class="text-gray-dim text-xs mt-1 uppercase tracking-wider">тонн</div>
-                </div>
-                <div class="bg-dark/60 rounded-2xl p-4 text-center border border-white/[0.03] hover:border-accent/20 transition-colors duration-300">
-                  <div class="text-accent font-bold text-2xl lg:text-3xl">{vehicle.volume}</div>
-                  <div class="text-gray-dim text-xs mt-1 uppercase tracking-wider">м&sup3;</div>
-                </div>
-                <div class="bg-dark/60 rounded-2xl p-4 text-center border border-white/[0.03] hover:border-accent/20 transition-colors duration-300">
-                  <div class="text-accent font-bold text-2xl lg:text-3xl">{vehicle.drive}</div>
-                  <div class="text-gray-dim text-xs mt-1 uppercase tracking-wider">привод</div>
-                </div>
-              </div>
-            </div>
-            <!-- Accent line -->
-            <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-          </div>
-        </article>
-      ))}
-    </div>
-
-    <!-- Bottom 3 cards -->
-    <div class="fleet-grid-bottom grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-      {fleet.slice(2).map((vehicle, index) => (
-        <article class="fleet-card group" data-index={index + 2}>
-          <div class="fleet-card-inner relative bg-card rounded-3xl overflow-hidden border border-white/5 h-full transition-all duration-500 hover:border-accent/40">
-            <!-- Vehicle Image -->
-            <div class="relative h-56 lg:h-64 overflow-hidden bg-dark-lighter">
-              <div class="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent z-10"></div>
-              <div class="absolute inset-0 flex items-center justify-center">
-                <div class="relative">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-28 h-28 text-white/[0.06]" fill="currentColor" viewBox="0 0 640 512">
-                    <path d="M48 0C21.5 0 0 21.5 0 48V368c0 26.5 21.5 48 48 48H64c0 53 43 96 96 96s96-43 96-96H384c0 53 43 96 96 96s96-43 96-96h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V288 256 237.3c0-17-6.7-33.3-18.7-45.3L512 118.6c-12-12-28.3-18.7-45.3-18.7H416V48c0-26.5-21.5-48-48-48H48zM416 160h50.7L544 237.3V256H416V160zM208 416a48 48 0 1 1-96 0 48 48 0 1 1 96 0zm272 48a48 48 0 1 1 0-96 48 48 0 1 1 0 96z"/>
-                  </svg>
-                  <div class="absolute inset-0 blur-3xl bg-accent/10 rounded-full scale-150"></div>
-                </div>
-              </div>
-              {vehicle.type && (
-                <div class="absolute top-5 left-5 z-20 bg-white/10 backdrop-blur-md text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/10">
-                  {vehicle.type}
-                </div>
-              )}
-              {vehicle.count > 1 && (
-                <div class="absolute top-5 right-5 z-20 bg-accent text-white text-sm font-bold w-11 h-11 rounded-full flex items-center justify-center shadow-lg shadow-accent/30">
-                  ×{vehicle.count}
-                </div>
-              )}
-              <div class="absolute bottom-2 right-5 z-20 text-[100px] font-black leading-none text-white/[0.03] select-none pointer-events-none">
-                {String(index + 3).padStart(2, '0')}
-              </div>
-              <!-- Info overlay -->
-              <div class="absolute bottom-0 left-0 right-0 z-20 p-5 lg:p-6">
-                <h3 class="text-xl lg:text-2xl font-bold text-white group-hover:text-accent transition-colors duration-300">{vehicle.name}</h3>
-                <p class="text-gray-dim text-sm mt-1 flex items-center gap-2">
-                  <span class="w-4 h-px bg-gray-dim"></span>
-                  {vehicle.year}
-                </p>
-              </div>
-            </div>
-            <!-- Specs -->
-            <div class="p-5 lg:p-6 pt-3 lg:pt-4">
-              <div class="grid grid-cols-3 gap-2">
-                <div class="bg-dark/60 rounded-xl p-3 text-center border border-white/[0.03] hover:border-accent/20 transition-colors duration-300">
-                  <div class="text-accent font-bold text-xl lg:text-2xl">{vehicle.capacity}</div>
-                  <div class="text-gray-dim text-xs mt-0.5 uppercase tracking-wider">тонн</div>
-                </div>
-                <div class="bg-dark/60 rounded-xl p-3 text-center border border-white/[0.03] hover:border-accent/20 transition-colors duration-300">
-                  <div class="text-accent font-bold text-xl lg:text-2xl">{vehicle.volume}</div>
-                  <div class="text-gray-dim text-xs mt-0.5 uppercase tracking-wider">м&sup3;</div>
-                </div>
-                <div class="bg-dark/60 rounded-xl p-3 text-center border border-white/[0.03] hover:border-accent/20 transition-colors duration-300">
-                  <div class="text-accent font-bold text-xl lg:text-2xl">{vehicle.drive}</div>
-                  <div class="text-gray-dim text-xs mt-0.5 uppercase tracking-wider">привод</div>
-                </div>
-              </div>
-            </div>
-            <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-          </div>
-        </article>
-      ))}
-    </div>
-
-    <!-- CTA Banner -->
-    <div class="fleet-cta mt-12 lg:mt-16">
-      <div class="relative bg-card rounded-3xl border border-white/5 overflow-hidden">
-        <!-- Background glow -->
+    <!-- CTA -->
+    <div class="fleet-cta mt-14 lg:mt-20">
+      <div class="relative rounded-3xl border border-white/5 overflow-hidden" style="background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);">
         <div class="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3"></div>
         <div class="relative flex flex-col sm:flex-row items-center justify-between gap-6 p-8 lg:p-12">
           <div>
@@ -179,14 +235,8 @@ import { fleet } from '@/data/fleet';
 </section>
 
 <style>
-  /* 3D tilt perspective */
-  .fleet-card {
-    perspective: 1000px;
-  }
-
-  .fleet-card-inner {
-    transform-style: preserve-3d;
-    will-change: transform;
+  .fleet-section {
+    background-color: var(--color-dark);
   }
 </style>
 
@@ -196,128 +246,175 @@ import { fleet } from '@/data/fleet';
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // ── Title reveal ──
-  gsap.from('.fleet-title-line > span', {
-    y: '110%',
-    duration: 1,
-    ease: 'power4.out',
-    stagger: 0.12,
-    scrollTrigger: {
-      trigger: '#fleet',
-      start: 'top 75%',
-    },
+  const fleetData = [
+    { name: 'SHACMAN X3000', year: '2022–2023', count: 6, capacity: 30, volume: 19, drive: '6×6', power: '430 л.с.', grossWeight: 31, description: 'Флагман автопарка. Надёжная рабочая лошадка для тяжёлых условий Западной Сибири.' },
+    { name: 'МАЗ 6514', year: '2019', count: 2, capacity: 25, volume: 16, drive: '6×6', power: '412 л.с.', grossWeight: 42, description: 'Проверенный белорусский самосвал. Отлично показал себя на бездорожье ХМАО.' },
+    { name: 'КАМАЗ 6522', year: '2021', count: 1, capacity: 25, volume: 16, drive: '6×6', power: '400 л.с.', grossWeight: 33, description: 'Легендарный тяжеловоз. Создан для российских дорог и экстремальных условий.' },
+    { name: 'VOLVO FMX', year: '2019', count: 1, capacity: 25, volume: 16, drive: '6×6', power: '500 л.с.', grossWeight: 33, description: 'Шведская мощь и надёжность. Премиальный самосвал для самых сложных задач.' },
+  ];
+
+  const slides = document.querySelectorAll('.fleet-slide');
+  const thumbs = document.querySelectorAll('.fleet-thumb');
+  const specsTables = document.querySelectorAll('.fleet-specs-table');
+  const totalSlides = slides.length;
+  let current = 0;
+  let isAnimating = false;
+  let specsOpen = false;
+
+  function animateValue(el: HTMLElement, newVal: number) {
+    const oldVal = parseInt(el.textContent || '0') || 0;
+    gsap.to({ val: oldVal }, {
+      val: newVal, duration: 0.8, ease: 'power2.out',
+      snap: { val: 1 },
+      onUpdate: function() { el.textContent = String(Math.round(this.targets()[0].val)); },
+    });
+  }
+
+  // Specs panel toggle
+  const specsBtn = document.getElementById('fleet-specs-btn');
+  const specsPanel = document.getElementById('fleet-specs-panel');
+  const specsChevron = document.getElementById('fleet-specs-chevron');
+
+  specsBtn?.addEventListener('click', () => {
+    specsOpen = !specsOpen;
+    if (specsPanel) {
+      specsPanel.style.maxHeight = specsOpen ? specsPanel.scrollHeight + 'px' : '0';
+    }
+    if (specsChevron) {
+      specsChevron.style.transform = specsOpen ? 'rotate(180deg)' : 'rotate(0)';
+    }
   });
 
-  gsap.from('.fleet-label', {
-    opacity: 0,
-    x: -30,
-    duration: 0.8,
-    ease: 'power3.out',
-    scrollTrigger: { trigger: '#fleet', start: 'top 75%' },
-  });
-
-  gsap.from('.fleet-subtitle', {
-    opacity: 0,
-    y: 20,
-    duration: 0.8,
-    delay: 0.3,
-    ease: 'power3.out',
-    scrollTrigger: { trigger: '#fleet', start: 'top 75%' },
-  });
-
-
-  // ── Staggered card reveals ──
-  const topCards = document.querySelectorAll('.fleet-grid .fleet-card');
-  gsap.from(topCards, {
-    opacity: 0,
-    y: 80,
-    scale: 0.92,
-    duration: 0.9,
-    stagger: 0.15,
-    ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.fleet-grid',
-      start: 'top 80%',
-    },
-  });
-
-  const bottomCards = document.querySelectorAll('.fleet-grid-bottom .fleet-card');
-  gsap.from(bottomCards, {
-    opacity: 0,
-    y: 80,
-    scale: 0.92,
-    duration: 0.9,
-    stagger: 0.12,
-    ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.fleet-grid-bottom',
-      start: 'top 85%',
-    },
-  });
-
-  // ── CTA reveal ──
-  gsap.from('.fleet-cta', {
-    opacity: 0,
-    y: 40,
-    duration: 0.8,
-    ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.fleet-cta',
-      start: 'top 90%',
-    },
-  });
-
-  // ── 3D Card Tilt ──
-  document.querySelectorAll('.fleet-card-inner').forEach((card) => {
-    const el = card as HTMLElement;
-
-    el.addEventListener('mousemove', (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = ((y - centerY) / centerY) * -5;
-      const rotateY = ((x - centerX) / centerX) * 5;
-
-      gsap.to(el, {
-        rotateX,
-        rotateY,
-        duration: 0.4,
-        ease: 'power2.out',
-        transformPerspective: 1000,
+  function showSpecsTable(index: number) {
+    specsTables.forEach((table, i) => {
+      (table as HTMLElement).classList.toggle('hidden', i !== index);
+    });
+    // Update panel height if open
+    if (specsOpen && specsPanel) {
+      requestAnimationFrame(() => {
+        specsPanel.style.maxHeight = specsPanel.scrollHeight + 'px';
       });
+    }
+  }
+
+  function goToSlide(index: number, direction: number = 1) {
+    if (isAnimating || index === current) return;
+    isAnimating = true;
+
+    const fromSlide = slides[current] as HTMLElement;
+    const toSlide = slides[index] as HTMLElement;
+    const data = fleetData[index];
+
+    const tl = gsap.timeline({
+      onComplete: () => { current = index; isAnimating = false; },
     });
 
-    el.addEventListener('mouseleave', () => {
-      gsap.to(el, {
-        rotateX: 0,
-        rotateY: 0,
-        duration: 0.6,
-        ease: 'elastic.out(1, 0.5)',
-      });
+    // Out
+    tl.to(fromSlide, {
+      opacity: 0, x: -120 * direction, scale: 0.85,
+      duration: 0.45, ease: 'power3.in',
+      onComplete: () => { fromSlide.style.visibility = 'hidden'; fromSlide.style.position = 'absolute'; },
     });
-  });
+    tl.to('.fleet-spec', { opacity: 0, y: 15, duration: 0.25, ease: 'power2.in' }, '<');
+    tl.to('#fleet-name', { y: -20, opacity: 0, duration: 0.2, ease: 'power2.in' }, '<0.05');
+    tl.to('#fleet-desc', { opacity: 0, duration: 0.2 }, '<');
 
-  // ── Counter animation ──
-  const counters = document.querySelectorAll('.counter');
-  const counterObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target as HTMLElement;
-        const target = parseInt(el.dataset.target || '0');
-        gsap.to({ val: 0 }, {
-          val: target,
-          duration: 2,
-          ease: 'power2.out',
-          onUpdate: function() {
-            el.textContent = Math.round(this.targets()[0].val).toString();
-          },
-        });
-        counterObserver.unobserve(el);
+    // In
+    tl.set(toSlide, { visibility: 'visible', position: 'relative', opacity: 0, x: 120 * direction, scale: 0.85 });
+    tl.to(toSlide, { opacity: 1, x: 0, scale: 1, duration: 0.55, ease: 'power3.out' });
+
+    tl.add(() => {
+      document.getElementById('fleet-name')!.textContent = data.name;
+      document.getElementById('fleet-desc')!.textContent = data.description;
+      document.getElementById('fleet-year')!.textContent = data.year;
+
+      const countEl = document.getElementById('fleet-count');
+      if (countEl) {
+        countEl.style.display = data.count > 1 ? '' : 'none';
+        const countText = countEl.querySelector('.text-accent');
+        if (countText) countText.textContent = `${data.count} ЕДИНИЦ`;
+      }
+
+      animateValue(document.getElementById('spec-capacity')!, data.capacity);
+      animateValue(document.getElementById('spec-volume')!, data.volume);
+      document.getElementById('spec-drive')!.textContent = data.drive;
+      document.getElementById('spec-engine')!.textContent = data.power;
+      animateValue(document.getElementById('spec-gross')!, data.grossWeight);
+
+      showSpecsTable(index);
+    }, '<');
+
+    tl.fromTo('#fleet-name', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }, '<0.1');
+    tl.fromTo('#fleet-desc', { opacity: 0 }, { opacity: 1, duration: 0.4 }, '<0.1');
+    tl.fromTo('#fleet-meta', { opacity: 0 }, { opacity: 1, duration: 0.3 }, '<0.1');
+    tl.fromTo('.fleet-spec', { opacity: 0, y: 15 }, { opacity: 1, y: 0, stagger: 0.05, duration: 0.4, ease: 'power3.out' }, '<0.1');
+
+    // Thumbnails
+    thumbs.forEach((thumb, i) => {
+      const el = thumb as HTMLElement;
+      if (i === index) {
+        gsap.to(el, { scale: 1.1, opacity: 1, duration: 0.3 });
+        el.classList.remove('border-white/[0.06]', 'bg-white/[0.02]', 'opacity-40');
+        el.classList.add('border-accent/50', 'bg-accent/5');
+      } else {
+        gsap.to(el, { scale: 1, opacity: 0.4, duration: 0.3 });
+        el.classList.remove('border-accent/50', 'bg-accent/5', 'scale-110');
+        el.classList.add('border-white/[0.06]', 'bg-white/[0.02]', 'opacity-40');
       }
     });
-  }, { threshold: 0.5 });
+  }
 
-  counters.forEach(c => counterObserver.observe(c));
+
+  thumbs.forEach((thumb) => {
+    thumb.addEventListener('click', () => {
+      const index = parseInt((thumb as HTMLElement).dataset.thumb || '0');
+      goToSlide(index, index > current ? 1 : -1);
+    });
+  });
+
+  // Keyboard
+  document.addEventListener('keydown', (e) => {
+    const stage = document.getElementById('fleet-stage');
+    if (!stage) return;
+    const rect = stage.getBoundingClientRect();
+    if (rect.top > window.innerHeight || rect.bottom < 0) return;
+    if (e.key === 'ArrowLeft') goToSlide((current - 1 + totalSlides) % totalSlides, -1);
+    if (e.key === 'ArrowRight') goToSlide((current + 1) % totalSlides, 1);
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  const stage = document.getElementById('fleet-stage');
+  stage?.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  stage?.addEventListener('touchend', (e) => {
+    const diff = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(diff) > 50) {
+      diff > 0 ? goToSlide((current - 1 + totalSlides) % totalSlides, -1) : goToSlide((current + 1) % totalSlides, 1);
+    }
+  });
+
+  // Entrance animations
+  gsap.from('.fleet-title-line > span', {
+    y: '110%', duration: 1, ease: 'power4.out', stagger: 0.12,
+    scrollTrigger: { trigger: '#fleet', start: 'top 75%' },
+  });
+  gsap.from('.fleet-label', {
+    opacity: 0, x: -30, duration: 0.8, ease: 'power3.out',
+    scrollTrigger: { trigger: '#fleet', start: 'top 75%' },
+  });
+  gsap.from('#fleet-stage', {
+    opacity: 0, y: 60, duration: 1, ease: 'power3.out',
+    scrollTrigger: { trigger: '#fleet-stage', start: 'top 85%' },
+  });
+  gsap.from('.fleet-cta', {
+    opacity: 0, y: 40, duration: 0.8, ease: 'power3.out',
+    scrollTrigger: { trigger: '.fleet-cta', start: 'top 90%' },
+  });
+
+  // Auto-play
+  let autoplay = setInterval(() => goToSlide((current + 1) % totalSlides, 1), 6000);
+  stage?.addEventListener('mouseenter', () => clearInterval(autoplay));
+  stage?.addEventListener('mouseleave', () => {
+    autoplay = setInterval(() => goToSlide((current + 1) % totalSlides, 1), 6000);
+  });
 </script>

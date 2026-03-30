@@ -7,6 +7,11 @@ export interface Vehicle {
   drive: string;
   count: number;
   image: string;
+  engine?: string;
+  fuel?: string;
+  bodyType?: string;
+  grossWeight?: number;
+  description?: string;
 }
 
 export interface Material {
