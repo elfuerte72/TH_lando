@@ -70,6 +70,36 @@ import { materials } from '@/data/materials';
       ))}
     </div>
 
+    <!-- License -->
+    <div class="license-badge mt-8 lg:mt-12 rounded-xl bg-card border border-white/[0.06] border-l-2 border-l-accent p-5 lg:p-6 flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
+
+      <!-- Shield icon -->
+      <div class="shrink-0 w-11 h-11 rounded-lg bg-accent/10 flex items-center justify-center">
+        <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <!-- Content -->
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">
+          <h3 class="text-white font-heading font-bold text-sm lg:text-base uppercase tracking-wider">Лицензия на обращение с отходами</h3>
+          <div class="flex items-center gap-1.5">
+            {['I', 'II', 'III', 'IV'].map((cls) => (
+              <span class="w-6 h-6 rounded bg-white/[0.06] flex items-center justify-center text-accent font-heading font-bold text-[11px]">
+                {cls}
+              </span>
+            ))}
+            <span class="text-gray-dim text-xs ml-1">класс опасности</span>
+          </div>
+        </div>
+        <p class="text-gray-sub text-sm leading-relaxed">
+          Одна из&nbsp;немногих компаний в&nbsp;регионе. Сбор, транспортирование, обработка, утилизация, обезвреживание и&nbsp;размещение отходов.
+        </p>
+      </div>
+
+    </div>
+
   </div>
 </section>
 
@@ -101,6 +131,19 @@ import { materials } from '@/data/materials';
     y: 30,
     duration: 0.5,
     stagger: 0.08,
+    ease: 'power3.out',
+  });
+
+  // License badge animation
+  gsap.from('.license-badge', {
+    scrollTrigger: {
+      trigger: '.license-badge',
+      start: 'top 90%',
+      toggleActions: 'play none none none',
+    },
+    y: 20,
+    opacity: 0,
+    duration: 0.7,
     ease: 'power3.out',
   });
 </script>
