@@ -7,7 +7,7 @@ import { advantages } from '@/data/stats';
   <!-- LAYER 1: Background photo with vignette -->
   <div class="absolute inset-0">
     <img
-      src="/images/advantages/team-bg.png"
+      src="/images/advantages/bg-excavator.jpg"
       alt=""
       loading="lazy"
       class="advantages-bg w-full h-full object-cover"
@@ -15,7 +15,7 @@ import { advantages } from '@/data/stats';
     />
 
     <!-- Dark overlay -->
-    <div class="absolute inset-0 bg-dark/65"></div>
+    <div class="absolute inset-0 bg-dark/75"></div>
 
     <!-- Edge feathers: seamless blend into #0a0a0d -->
     <div class="absolute inset-x-0 top-0 h-24 lg:h-48 bg-gradient-to-b from-dark to-transparent"></div>
@@ -34,7 +34,7 @@ import { advantages } from '@/data/stats';
         Преимущества
         <span class="w-8 h-px bg-accent"></span>
       </span>
-      <h2 class="text-5xl sm:text-6xl lg:text-7xl font-black mt-4 leading-[0.9]">
+      <h2 class="text-4xl sm:text-6xl lg:text-7xl font-black mt-4 leading-[0.9] whitespace-nowrap">
         <span class="block overflow-hidden">
           <span class="inline-block">ПОЧЕМУ <span class="text-accent">ТРАК ХОЛДИНГ</span></span>
         </span>
@@ -60,6 +60,7 @@ import { advantages } from '@/data/stats';
     -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 35%, transparent 100%);
     mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 35%, transparent 100%);
     will-change: transform;
+    filter: saturate(0.3) brightness(0.8);
   }
 
 </style>
