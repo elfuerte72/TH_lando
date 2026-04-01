@@ -32,13 +32,3 @@ export const materials: Material[] = [
     image: '/images/materials/asphalt.jpg',
   },
 ];
-
-export const cargoOptions = [
-  'Буровой шлам',
-  'Щебень',
-  'Песок',
-  'Грунт',
-  'Уголь и руда',
-  'Асфальт',
-  'Другое',
-] as const;
