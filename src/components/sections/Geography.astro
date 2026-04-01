@@ -62,10 +62,18 @@ function getLabelAnchor(name: string): { dx: number; dy: number; anchor: string 
 <section id="geography" class="py-20 lg:py-30 bg-dark">
   <div class="max-w-[var(--container-max-width)] mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Section Header -->
-    <div class="max-w-2xl mb-16">
-      <span class="text-accent text-sm font-semibold uppercase tracking-widest">Покрытие</span>
-      <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold mt-3 mb-6">ГЕОГРАФИЯ РАБОТ</h2>
-      <p class="text-gray-sub text-lg lg:text-xl leading-relaxed">
+    <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-16 geo-header">
+      <span class="text-accent text-sm font-semibold uppercase tracking-widest inline-flex items-center gap-3 justify-center">
+        <span class="w-8 h-px bg-accent"></span>
+        Регионы
+        <span class="w-8 h-px bg-accent"></span>
+      </span>
+      <h2 class="text-3xl sm:text-5xl lg:text-7xl font-black mt-4 leading-[0.9]">
+        <span class="block overflow-hidden">
+          <span class="inline-block">ГЕОГРАФИЯ <span class="text-accent">РАБОТ</span></span>
+        </span>
+      </h2>
+      <p class="text-gray-sub text-base lg:text-lg leading-relaxed mt-5 max-w-xl mx-auto">
         От Тюмени до Крайнего Севера. ХМАО. ЯНАО. Иркутская область.
       </p>
     </div>
@@ -190,31 +198,41 @@ function getLabelAnchor(name: string): { dx: number; dy: number; anchor: string 
       <!-- Sidebar -->
       <div class="lg:col-span-2 space-y-6">
         <!-- New Direction Banner -->
-        <div class="bg-accent rounded-2xl p-8 text-white">
-          <div class="flex items-center gap-2 mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-            </svg>
-            <span class="font-semibold uppercase text-sm tracking-wider">Новое направление</span>
+        <div class="relative bg-gradient-to-br from-accent to-accent/80 rounded-2xl p-8 text-white overflow-hidden group">
+          <!-- Decorative background pattern -->
+          <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+          <div class="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+          <div class="relative">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-white/15 backdrop-blur-sm rounded-full mb-5">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+              </span>
+              <span class="font-semibold uppercase text-xs tracking-wider">Новое направление</span>
+            </div>
+            <h3 class="text-xl lg:text-2xl font-black mb-3 leading-tight">Ковыктинское<br/>месторождение</h3>
+            <div class="w-10 h-px bg-white/30 mb-3"></div>
+            <p class="text-white/85 text-sm leading-relaxed">
+              Газопровод «Сила Сибири».<br/>Поставка газа в&nbsp;Китай.
+            </p>
           </div>
-          <h3 class="text-xl font-bold mb-2">Ковыктинское месторождение</h3>
-          <p class="text-white/80 text-sm leading-relaxed">
-            Газопровод «Сила Сибири». Поставка газа в&nbsp;Китай.
-          </p>
         </div>
 
         <!-- Sectors -->
         <div class="bg-card border border-white/5 rounded-2xl p-8">
-          <h3 class="text-lg font-bold mb-6">Секторы работы</h3>
-          <div class="grid grid-cols-2 gap-4">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-1 h-6 bg-accent rounded-full"></div>
+            <h3 class="text-lg font-bold uppercase tracking-wide">Секторы работы</h3>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {sectors.map((sector) => (
-              <div class="flex items-center gap-3 p-3 rounded-xl bg-dark/50">
-                <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center">
+              <div class="geo-sector-card flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-dark/40 hover:border-accent/30 hover:bg-accent/5 transition-all duration-300">
+                <div class="w-11 h-11 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d={sectorIcons[sector.icon] || sectorIcons.building} />
                   </svg>
                 </div>
-                <span class="text-white/90 text-sm font-medium">{sector.name}</span>
+                <span class="text-white/90 text-sm font-semibold tracking-wide">{sector.name}</span>
               </div>
             ))}
           </div>
