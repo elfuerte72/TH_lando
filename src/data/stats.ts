@@ -27,5 +27,4 @@ export const navigation = [
   { label: 'Услуги', href: '#materials' },
   { label: 'Преимущества', href: '#advantages' },
   { label: 'О компании', href: '#about' },
-  { label: 'Контакты', href: '#contact' },
 ];
