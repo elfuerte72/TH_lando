@@ -9,11 +9,11 @@ const specsData = [
       ['Мощность', '430 л.с. (316 кВт)'],
       ['Крутящий момент', '2 060 Нм'],
       ['Коробка передач', '12JSDX220TA-B, 12 ступеней'],
-      ['Грузоподъёмность', '19,6 т'],
+      ['Грузоподъёмность', '30 т'],
       ['Объём кузова', '19,3 м³'],
-      ['Полная масса', '31 000 кг'],
+      ['Полная масса', '47 000 кг'],
       ['Габариты (Д×Ш×В)', '8 480 × 2 550 × 3 650 мм'],
-      ['Шины', '315/80R22.5'],
+      ['Шины', '12.00 R20'],
       ['Макс. скорость', '100 км/ч'],
       ['Топливный бак', '500 л'],
     ],
@@ -22,14 +22,14 @@ const specsData = [
     rows: [
       ['Колёсная формула', '6×6'],
       ['Двигатель', 'ЯМЗ-652, Common Rail'],
-      ['Мощность', '412 л.с. (303 кВт)'],
+      ['Мощность', '420 л.с.'],
       ['Крутящий момент', '1 870 Нм'],
       ['Коробка передач', '12JS200TA, 12 ступеней'],
-      ['Грузоподъёмность', '26,5 т'],
+      ['Грузоподъёмность', '25 т'],
       ['Объём кузова', '16,5 м³'],
       ['Полная масса', '42 000 кг'],
       ['Габариты (Д×Ш×В)', '8 600 × 2 550 × 3 300 мм'],
-      ['Шины', '12.00 R24'],
+      ['Шины', '12.00 R20'],
       ['Макс. скорость', '85 км/ч'],
       ['Топливный бак', '500 л'],
     ],
@@ -41,7 +41,7 @@ const specsData = [
       ['Мощность', '400 л.с. (294 кВт)'],
       ['Крутящий момент', '1 766 Нм'],
       ['Коробка передач', 'ZF 16S1820TO, 16 ступеней'],
-      ['Грузоподъёмность', '19,07 т'],
+      ['Грузоподъёмность', '19 т'],
       ['Объём кузова', '16 м³'],
       ['Полная масса', '33 100 кг'],
       ['Габариты (Д×Ш×В)', '7 880 × 2 500 × 3 280 мм'],
@@ -54,14 +54,14 @@ const specsData = [
     rows: [
       ['Колёсная формула', '6×6'],
       ['Двигатель', 'Volvo D13K, 6 цил., 12.8 л'],
-      ['Мощность', '500 л.с. (368 кВт)'],
+      ['Мощность', '428 л.с. (315 кВт)'],
       ['Крутящий момент', '2 500 Нм'],
       ['Коробка передач', 'Volvo I-Shift, 12 ступеней'],
       ['Грузоподъёмность', '25 т'],
       ['Объём кузова', '16 м³'],
-      ['Полная масса', '33 000 кг'],
+      ['Полная масса', '42 000 кг'],
       ['Габариты (Д×Ш×В)', '8 400 × 2 550 × 3 350 мм'],
-      ['Шины', '315/80R22.5'],
+      ['Шины', '12.00 R20'],
       ['Макс. скорость', '90 км/ч'],
       ['Топливный бак', '400 л'],
     ],
@@ -119,14 +119,6 @@ const specsData = [
         <div class="fleet-info-left order-2 lg:order-1 text-center lg:text-left">
           <h3 id="fleet-name" class="text-3xl sm:text-4xl lg:text-3xl xl:text-4xl font-black text-white leading-tight">{fleet[0].name}</h3>
           <p id="fleet-desc" class="text-gray-sub text-sm mt-2 leading-relaxed">{fleet[0].description}</p>
-          <div id="fleet-meta" class="flex items-center justify-center lg:justify-start gap-3 mt-2 flex-wrap">
-            <span id="fleet-year" class="text-gray-dim text-sm">{fleet[0].year}</span>
-            <span class="text-white/10">|</span>
-            <span id="fleet-count" class="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider" style={fleet[0].count <= 1 ? 'display:none' : ''}>
-              <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
-              <span class="text-accent">{fleet[0].count} ЕДИНИЦ</span>
-            </span>
-          </div>
 
           <!-- Key specs -->
           <div id="fleet-specs" class="flex flex-col gap-0 mt-6">
@@ -150,7 +142,7 @@ const specsData = [
             </div>
             <div class="fleet-spec py-3 border-b border-white/[0.05]">
               <div class="text-gray-dim text-[10px] uppercase tracking-[0.15em]">Мощность</div>
-              <div id="spec-engine" class="text-white font-black text-xl">430 л.с.</div>
+              <div id="spec-engine" class="text-white font-black text-xl">{fleet[0].engine?.match(/\d+\s*л\.с\./)?.[0] || '430 л.с.'}</div>
             </div>
             <div class="fleet-spec py-3">
               <div class="text-gray-dim text-[10px] uppercase tracking-[0.15em]">Полная масса</div>
@@ -218,10 +210,10 @@ const specsData = [
   gsap.registerPlugin(ScrollTrigger);
 
   const fleetData = [
-    { name: 'SHACMAN X3000', year: '2022–2023', count: 6, capacity: 30, volume: 19, drive: '6×6', power: '430 л.с.', grossWeight: 31, description: 'Флагман автопарка. Надёжная рабочая лошадка для тяжёлых условий Западной Сибири.' },
-    { name: 'МАЗ 6514', year: '2019', count: 2, capacity: 25, volume: 16, drive: '6×6', power: '412 л.с.', grossWeight: 42, description: 'Проверенный белорусский самосвал. Отлично показал себя на бездорожье ХМАО.' },
-    { name: 'КАМАЗ 6522', year: '2021', count: 1, capacity: 25, volume: 16, drive: '6×6', power: '400 л.с.', grossWeight: 33, description: 'Легендарный тяжеловоз. Создан для российских дорог и экстремальных условий.' },
-    { name: 'VOLVO FMX', year: '2019', count: 1, capacity: 25, volume: 16, drive: '6×6', power: '500 л.с.', grossWeight: 33, description: 'Шведская мощь и надёжность. Премиальный самосвал для самых сложных задач.' },
+    { name: 'SHACMAN X3000', capacity: 30, volume: 19, drive: '6×6', power: '430 л.с.', grossWeight: 47, description: 'Флагман автопарка. Надёжная рабочая лошадка для тяжёлых условий.' },
+    { name: 'МАЗ 6514', capacity: 25, volume: 16, drive: '6×6', power: '420 л.с.', grossWeight: 33, description: 'Проверенный белорусский самосвал. Отлично показал себя на бездорожье ХМАО, ЯНАО.' },
+    { name: 'КамАЗ 6522', capacity: 19, volume: 16, drive: '6×6', power: '400 л.с.', grossWeight: 33, description: 'Легендарный самосвал. Создан для российских дорог и экстремальных условий.' },
+    { name: 'VOLVO FMX', capacity: 25, volume: 16, drive: '6×6', power: '428 л.с.', grossWeight: 42, description: 'Шведская мощь и надёжность. Премиальный самосвал для самых сложных задач.' },
   ];
 
   const slides = document.querySelectorAll('.fleet-slide');
@@ -274,14 +266,6 @@ const specsData = [
     tl.add(() => {
       document.getElementById('fleet-name')!.textContent = data.name;
       document.getElementById('fleet-desc')!.textContent = data.description;
-      document.getElementById('fleet-year')!.textContent = data.year;
-
-      const countEl = document.getElementById('fleet-count');
-      if (countEl) {
-        countEl.style.display = data.count > 1 ? '' : 'none';
-        const countText = countEl.querySelector('.text-accent');
-        if (countText) countText.textContent = `${data.count} ЕДИНИЦ`;
-      }
 
       animateValue(document.getElementById('spec-capacity')!, data.capacity);
       animateValue(document.getElementById('spec-volume')!, data.volume);

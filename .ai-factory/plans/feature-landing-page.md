@@ -29,7 +29,7 @@
 - Populate all data from TZ (5 vehicle types, 6 materials, 19 locations, 5 stats)
 - Files: `src/types/index.ts`, `src/data/fleet.ts`, `src/data/materials.ts`, `src/data/locations.ts`, `src/data/stats.ts`
 
-**Task 3: Базовый лейаут и навигация** (blocked by: Task 1)
+**Task 3: Базовый лейаут и навигация** (blocked by: Task 1) референс сайта = volvotrucks.com
 - BaseLayout.astro: HTML5 head, SEO meta tags, OG tags, favicon, global styles
 - Header.astro: fixed navbar, logo TX (SVG), nav links with smooth scroll anchors, mobile burger menu
 - Footer.astro: copyright 2013-2026, contact info
