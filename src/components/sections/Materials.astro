@@ -9,12 +9,12 @@ import { materials } from '@/data/materials';
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[800px] blur-[120px]" style="background: radial-gradient(ellipse at 50% 50%, rgba(29,122,204,0.04) 0%, transparent 60%);"></div>
   </div>
 
-  <!-- Decorative truck image — left side, desktop only -->
-  <div id="materials-truck" class="hidden lg:block absolute left-0 -top-16 w-[340px] h-[420px] pointer-events-none" style="z-index: 1; -webkit-mask-image: radial-gradient(ellipse at 30% 50%, black 20%, transparent 70%); mask-image: radial-gradient(ellipse at 30% 50%, black 20%, transparent 70%);">
+  <!-- Decorative truck image — right side, desktop only -->
+  <div id="materials-truck" class="hidden lg:block absolute right-[-120px] xl:right-[-60px] top-2 w-[520px] xl:w-[580px] h-[360px] pointer-events-none overflow-hidden" style="z-index: 1; -webkit-mask-image: linear-gradient(to right, transparent 0%, black 30%, black 100%); mask-image: linear-gradient(to right, transparent 0%, black 30%, black 100%);">
     <img
-      src="/images/materials/truck-side.jpg"
+      src="/images/materials/truck-side.png"
       alt=""
-      class="w-full h-full object-cover object-center"
+      class="w-full h-full object-contain object-center opacity-70"
       loading="lazy"
     />
   </div>
@@ -116,7 +116,7 @@ import { materials } from '@/data/materials';
       start: 'top 85%',
       toggleActions: 'play none none reverse',
     },
-    x: -400,
+    x: 400,
     opacity: 0,
     duration: 1.2,
     ease: 'power2.out',
