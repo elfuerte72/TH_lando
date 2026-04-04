@@ -1,7 +1,5 @@
 ---
 import { locations, sectors } from '@/data/locations';
-import fs from 'node:fs';
-import path from 'node:path';
 
 const sectorIcons: Record<string, string> = {
   oil: 'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z',
@@ -9,54 +7,6 @@ const sectorIcons: Record<string, string> = {
   building: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
   factory: 'M3 21h18M3 10h18M3 7l6-4v4M9 21V10m0 0l6-4v4m0 7v4m0-4l6-4v4m0 0v4',
 };
-
-// Read the Russia SVG at build time (ArmGono/ru-svg-map, viewBox 0 0 1002 568)
-const svgPath = path.resolve('russia-new.svg');
-let svgContent = fs.readFileSync(svgPath, 'utf-8');
-
-// Extract path elements from single-line <path> tags
-const regions: { d: string; id: string; cls: string }[] = [];
-const pathRegex = /<path\s+class="([^"]*)"\s+id="(RU-[^"]*)"\s+d="([^"]*)"/g;
-let regMatch;
-while ((regMatch = pathRegex.exec(svgContent)) !== null) {
-  regions.push({ cls: regMatch[1], id: regMatch[2], d: regMatch[3] });
-}
-
-// Highlighted regions (HMAO, YANAO, Tyumen Oblast)
-// Irkutsk excluded — only Ковыктинское there, already has its own highlight marker
-const highlightedRegions = new Set(['RU-KHM', 'RU-YAN', 'RU-TYU']);
-
-// Convert geo coordinates to SVG coordinates using affine projection
-// Calibrated from known region centroids: Moscow, St.Petersburg, Ekaterinburg
-function geoToSvg(lat: number, lng: number): { x: number; y: number } {
-  return {
-    x: 6.0872 * lng + 12.4909 * lat - 800.8702,
-    y: 3.5620 * lng - 11.8848 * lat + 777.6780,
-  };
-}
-
-// Small cities too close together — exclude entirely to avoid clutter
-const excludedCities = new Set(['Ялуторовск', 'Заводоуковск', 'Ярково', 'Демьянское', 'Горноправдинск']);
-
-// Compute city positions
-const cityMarkers = locations
-  .filter((loc) => !excludedCities.has(loc.name))
-  .map((loc, i) => {
-    const pos = geoToSvg(loc.lat, loc.lng);
-    return { ...loc, svgX: pos.x, svgY: pos.y, index: i };
-  });
-
-// Label placement offsets
-const labelLeft: string[] = ['Надым', 'Сабетта', 'Нижневартовск', 'Лабытнанги'];
-const labelBelow: string[] = ['Коротчаево', 'Бованенково'];
-const labelAbove: string[] = ['Муравленко', 'Салехард'];
-
-function getLabelAnchor(name: string): { dx: number; dy: number; anchor: string } {
-  if (labelLeft.includes(name)) return { dx: -8, dy: 4, anchor: 'end' };
-  if (labelBelow.includes(name)) return { dx: 0, dy: 14, anchor: 'middle' };
-  if (labelAbove.includes(name)) return { dx: 0, dy: -10, anchor: 'middle' };
-  return { dx: 8, dy: 4, anchor: 'start' };
-}
 ---
 
 <section id="geography" class="py-20 lg:py-30 bg-dark">
@@ -81,125 +31,17 @@ function getLabelAnchor(name: string): { dx: number; dy: number; anchor: string 
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
       <!-- Map -->
       <div class="lg:col-span-3 relative">
-        <div class="w-full h-[350px] sm:h-[420px] lg:h-[500px] rounded-2xl overflow-hidden geo-map-wrap">
-          <svg
-            id="geography-map-svg"
-            viewBox="210 110 440 460"
-            preserveAspectRatio="xMidYMid meet"
-            class="w-full h-full"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <!-- Glow filter for markers -->
-              <filter id="glow-accent" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="3" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-              <filter id="glow-highlight" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="4" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-              <!-- Radial gradient for highlighted regions -->
-              <radialGradient id="region-glow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="rgba(29, 122, 204, 0.15)" />
-                <stop offset="100%" stop-color="rgba(29, 122, 204, 0.03)" />
-              </radialGradient>
-            </defs>
-
-            <!-- Russia regions -->
-            <g class="geo-regions">
-              {regions.map((region) => (
-                <path
-                  d={region.d}
-                  class={highlightedRegions.has(region.id) ? 'geo-region geo-region--active' : 'geo-region'}
-                  data-id={region.id}
-                />
-              ))}
-            </g>
-
-            <!-- Subtle connection lines from Тюмень hub -->
-            <g class="geo-connections" opacity="0.08">
-              {(() => {
-                const tyumen = cityMarkers.find(c => c.name === 'Тюмень');
-                if (!tyumen) return null;
-                return cityMarkers
-                  .filter(c => c.name !== 'Тюмень' && !c.highlight)
-                  .map(c => (
-                    <line
-                      x1={tyumen.svgX} y1={tyumen.svgY}
-                      x2={c.svgX} y2={c.svgY}
-                      stroke="var(--color-accent)"
-                      stroke-width="0.5"
-                      stroke-dasharray="3 4"
-                    />
-                  ));
-              })()}
-            </g>
-
-            <!-- City markers -->
-            {cityMarkers.map((city) => {
-              const isHighlight = !!city.highlight;
-              const r = isHighlight ? 5 : 3;
-              const label = getLabelAnchor(city.name);
-              return (
-                <g class={`geo-city ${isHighlight ? 'geo-city--highlight' : ''}`}>
-                  {/* Pulse ring */}
-                  <circle
-                    cx={city.svgX}
-                    cy={city.svgY}
-                    r={r * 2.5}
-                    fill="none"
-                    stroke={isHighlight ? '#f59e0b' : 'var(--color-accent)'}
-                    stroke-width="0.5"
-                    class="geo-pulse-ring"
-                    style={`animation-delay: ${city.index * 0.15}s`}
-                  />
-                  {/* Outer glow */}
-                  <circle
-                    cx={city.svgX}
-                    cy={city.svgY}
-                    r={r * 1.5}
-                    fill={isHighlight ? 'rgba(245, 158, 11, 0.2)' : 'rgba(29, 122, 204, 0.2)'}
-                  />
-                  {/* Core dot */}
-                  <circle
-                    cx={city.svgX}
-                    cy={city.svgY}
-                    r={r}
-                    fill={isHighlight ? '#f59e0b' : 'var(--color-accent)'}
-                    filter={isHighlight ? 'url(#glow-highlight)' : 'url(#glow-accent)'}
-                  />
-                  {/* Label */}
-                  <text
-                    x={city.svgX + label.dx}
-                    y={city.svgY + label.dy}
-                    text-anchor={label.anchor}
-                    class={`geo-svg-label ${isHighlight ? 'geo-svg-label--highlight' : ''}`}
-                  >
-                    {city.name}
-                  </text>
-                </g>
-              );
-            })}
-          </svg>
-        </div>
+        <div id="yandex-map" class="w-full h-[350px] sm:h-[420px] lg:h-[500px] rounded-2xl overflow-hidden"></div>
         <!-- Vignette overlay -->
         <div class="absolute inset-0 pointer-events-none rounded-2xl"
-          style="box-shadow: inset 0 0 80px 40px #0a0a0d;"
+          style="box-shadow: inset 0 0 60px 30px #0a0a0d;"
         ></div>
       </div>
 
       <!-- Sidebar -->
       <div class="lg:col-span-2 space-y-6">
         <!-- New Direction Banner -->
-        <div class="relative bg-gradient-to-br from-accent to-accent/80 rounded-2xl p-8 text-white overflow-hidden group">
-          <!-- Decorative background pattern -->
+        <div class="relative bg-gradient-to-br from-accent to-accent/80 rounded-2xl p-5 sm:p-8 text-white overflow-hidden group">
           <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
           <div class="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
           <div class="relative">
@@ -219,7 +61,7 @@ function getLabelAnchor(name: string): { dx: number; dy: number; anchor: string 
         </div>
 
         <!-- Sectors -->
-        <div class="bg-card border border-white/5 rounded-2xl p-8">
+        <div class="bg-card border border-white/5 rounded-2xl p-5 sm:p-8">
           <div class="flex items-center gap-3 mb-6">
             <div class="w-1 h-6 bg-accent rounded-full"></div>
             <h3 class="text-lg font-bold uppercase tracking-wide">Секторы работы</h3>
@@ -242,64 +84,379 @@ function getLabelAnchor(name: string): { dx: number; dy: number; anchor: string 
   </div>
 </section>
 
-<style>
-  /* Region base styling */
-  .geo-region {
-    fill: #151520;
-    stroke: #2a2a3a;
-    stroke-width: 0.5;
-    transition: fill 0.3s ease;
+<!-- Location data for client-side script -->
+<script type="application/json" id="geo-locations-data" set:html={JSON.stringify(locations)} />
+
+<script is:inline>
+  (function() {
+    // Load Yandex Maps API 2.1
+    function loadYandexMaps() {
+      return new Promise(function(resolve, reject) {
+        if (typeof ymaps !== 'undefined') { resolve(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://api-maps.yandex.ru/2.1/?apikey=3bfef6ce-190e-4fea-af21-5bd5c0b9522c&lang=ru_RU';
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    // Dark theme customization for Yandex Maps 2.1
+    var darkCustomization = [
+      // Water — deep dark blue
+      { tags: 'water', elements: 'geometry', stylers: { hue: '#0a1628', saturation: -0.8, lightness: -0.7 } },
+      // Land — very dark
+      { tags: 'land', elements: 'geometry', stylers: { hue: '#0a0a0d', saturation: -1, lightness: -0.85 } },
+      // Roads — subtle dark gray
+      { tags: 'road', elements: 'geometry.fill', stylers: { hue: '#1a1a2e', saturation: -1, lightness: -0.6 } },
+      { tags: 'road', elements: 'geometry.outline', stylers: { hue: '#111118', saturation: -1, lightness: -0.8 } },
+      // Road labels
+      { tags: 'road', elements: 'label.text.fill', stylers: { hue: '#8888aa', saturation: -0.5, lightness: -0.2 } },
+      { tags: 'road', elements: 'label.text.outline', stylers: { hue: '#0a0a0d', saturation: -1, lightness: -0.9 } },
+      // Buildings — slightly lighter than land
+      { tags: 'building', elements: 'geometry', stylers: { hue: '#12121a', saturation: -1, lightness: -0.75 } },
+      // Vegetation — dark muted green
+      { tags: 'vegetation', elements: 'geometry', stylers: { hue: '#0d1a0d', saturation: -0.8, lightness: -0.8 } },
+      // Landscape
+      { tags: 'landscape', elements: 'geometry', stylers: { hue: '#0e0e14', saturation: -1, lightness: -0.8 } },
+      // Admin boundaries — very subtle
+      { tags: 'admin', elements: 'geometry', stylers: { hue: '#1D7ACC', saturation: -0.5, lightness: -0.6, opacity: 0.3 } },
+      // All labels — muted
+      { tags: 'country', elements: 'label.text.fill', stylers: { hue: '#6a6a8a', saturation: -0.5, lightness: -0.2 } },
+      { tags: 'country', elements: 'label.text.outline', stylers: { hue: '#0a0a0d', saturation: -1, lightness: -0.9 } },
+      { tags: 'region', elements: 'label.text.fill', stylers: { hue: '#555570', saturation: -0.5, lightness: -0.3 } },
+      { tags: 'region', elements: 'label.text.outline', stylers: { hue: '#0a0a0d', saturation: -1, lightness: -0.9 } },
+      { tags: 'locality', elements: 'label.text.fill', stylers: { hue: '#7a7a9a', saturation: -0.5, lightness: -0.15 } },
+      { tags: 'locality', elements: 'label.text.outline', stylers: { hue: '#0a0a0d', saturation: -1, lightness: -0.9 } },
+    ];
+
+    function initGeographyMap() {
+      ymaps.ready(function() {
+        var mapContainer = document.getElementById('yandex-map');
+        if (!mapContainer) return;
+
+        var locationsData = JSON.parse(document.getElementById('geo-locations-data').textContent);
+
+        // Create map
+        var map = new ymaps.Map(mapContainer, {
+          center: [63, 72],
+          zoom: 4,
+          controls: ['zoomControl'],
+          type: 'yandex#map'
+        }, {
+          suppressMapOpenBlock: true,
+          yandexMapDisablePoiInteractivity: true
+        });
+
+        // Apply dark customization via CSS filter on ground pane
+        // API 2.1 customization API is limited; CSS filter is most reliable for dark theme
+        var groundPane = map.panes.get('ground').getElement();
+        groundPane.style.filter = 'invert(0.92) hue-rotate(180deg) saturate(0.3) brightness(0.6)';
+        groundPane.style.webkitFilter = 'invert(0.92) hue-rotate(180deg) saturate(0.3) brightness(0.6)';
+
+        // Custom balloon content layout
+        var BalloonContentLayout = ymaps.templateLayoutFactory.createClass(
+          '<div class="geo-balloon">' +
+            '<div class="geo-balloon-header">' +
+              '<span class="geo-balloon-title">{{ properties.name }}</span>' +
+            '</div>' +
+            '<div class="geo-balloon-body">{{ properties.description }}</div>' +
+          '</div>'
+        );
+
+        // Custom icon layout
+        var MarkerLayout = ymaps.templateLayoutFactory.createClass(
+          '<div class="geo-marker-wrapper" style="position:relative;width:0;height:0;">' +
+            '<div class="$[properties.markerClass]"></div>' +
+            '<div class="$[properties.pulseClass]"></div>' +
+            '<div class="$[properties.labelClass]">$[properties.name]</div>' +
+          '</div>'
+        );
+
+        // Add placemarks
+        locationsData.forEach(function(loc) {
+          var isHighlight = !!loc.highlight;
+
+          var placemark = new ymaps.Placemark(
+            [loc.lat, loc.lng],
+            {
+              name: loc.name,
+              description: loc.description || '',
+              hintContent: loc.name,
+              markerClass: isHighlight ? 'geo-marker geo-marker--highlight' : 'geo-marker',
+              pulseClass: isHighlight ? 'geo-pulse geo-pulse--highlight' : 'geo-pulse',
+              labelClass: isHighlight ? 'geo-label geo-label--highlight' : 'geo-label'
+            },
+            {
+              iconLayout: MarkerLayout,
+              iconShape: {
+                type: 'Circle',
+                coordinates: [0, 0],
+                radius: 20
+              },
+              balloonContentLayout: BalloonContentLayout,
+              balloonPanelMaxMapArea: 0,
+              hideIconOnBalloonOpen: false,
+              balloonOffset: [0, -15]
+            }
+          );
+
+          map.geoObjects.add(placemark);
+        });
+
+        // Fit bounds to show all markers with padding
+        if (map.geoObjects.getLength() > 0) {
+          var bounds = map.geoObjects.getBounds();
+          if (bounds) {
+            map.setBounds(bounds, {
+              checkZoomRange: true,
+              zoomMargin: 40
+            });
+          }
+        }
+      });
+    }
+
+    // Load and init
+    loadYandexMaps().then(function() {
+      initGeographyMap();
+    }).catch(function(err) {
+      console.error('Failed to load Yandex Maps API:', err);
+    });
+  })();
+</script>
+
+<style is:global>
+  /* ── Custom marker styles ── */
+  .geo-marker-wrapper {
+    position: relative;
+    cursor: pointer;
+    z-index: 1;
+    width: 0;
+    height: 0;
   }
 
-  .geo-region--active {
-    fill: #1a2535;
-    stroke: rgba(29, 122, 204, 0.4);
-    stroke-width: 0.8;
+  .geo-marker-wrapper:hover {
+    z-index: 10;
   }
 
-  /* SVG labels */
-  .geo-svg-label {
-    fill: rgba(255, 255, 255, 0.8);
+  .geo-marker {
+    width: 12px;
+    height: 12px;
+    background: #1D7ACC;
+    border-radius: 50%;
+    border: 2px solid rgba(29, 122, 204, 0.3);
+    box-shadow: 0 0 8px rgba(29, 122, 204, 0.5);
+    transform: translate(-50%, -50%);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .geo-marker-wrapper:hover .geo-marker {
+    transform: translate(-50%, -50%) scale(1.4);
+    box-shadow: 0 0 16px rgba(29, 122, 204, 0.8);
+  }
+
+  .geo-marker--highlight {
+    width: 16px;
+    height: 16px;
+    background: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.3);
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
+    transform: translate(-50%, -50%);
+  }
+
+  .geo-marker-wrapper:hover .geo-marker--highlight {
+    transform: translate(-50%, -50%) scale(1.4);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.9);
+  }
+
+  /* ── Pulse animation ── */
+  .geo-pulse {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(29, 122, 204, 0.4);
+    transform: translate(-50%, -50%);
+    animation: geo-pulse-ring 2.5s ease-out infinite;
+    pointer-events: none;
+  }
+
+  .geo-pulse--highlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(245, 158, 11, 0.5);
+    transform: translate(-50%, -50%);
+    animation: geo-pulse-ring-highlight 2.5s ease-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes geo-pulse-ring {
+    0% {
+      opacity: 0.8;
+      transform: translate(-50%, -50%) scale(0.3);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+  }
+
+  @keyframes geo-pulse-ring-highlight {
+    0% {
+      opacity: 0.9;
+      transform: translate(-50%, -50%) scale(0.3);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(1.4);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .geo-pulse,
+    .geo-pulse--highlight {
+      animation: none;
+    }
+  }
+
+  /* ── Label ── */
+  .geo-label {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
     font-family: 'Inter', sans-serif;
-    font-size: 6px;
-    letter-spacing: 0.03em;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 0.02em;
+    pointer-events: none;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+    opacity: 0;
+    transition: opacity 0.2s ease;
   }
 
-  .geo-svg-label--highlight {
-    fill: #f59e0b;
-    font-size: 7px;
+  .geo-marker-wrapper:hover .geo-label {
+    opacity: 1;
+  }
+
+  .geo-label--highlight {
+    color: #f59e0b;
     font-weight: 600;
+    font-size: 12px;
+    opacity: 1;
   }
 
-  /* Pulse animation for marker rings */
-  .geo-pulse-ring {
-    animation: svg-pulse 2.5s ease-in-out infinite;
-    transform-origin: center;
+  .geo-marker-wrapper:hover .geo-label--highlight {
+    opacity: 1;
   }
 
-  @keyframes svg-pulse {
-    0%, 100% {
-      opacity: 0;
-      r: 3;
-    }
-    50% {
-      opacity: 0.6;
-      r: 8;
-    }
+  /* ── Balloon (popup) styles ── */
+  /* Override default Yandex balloon styles */
+  .ymaps-2-1-79-balloon {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+    border-radius: 12px !important;
   }
 
-  .geo-city--highlight .geo-pulse-ring {
-    animation: svg-pulse-highlight 2.5s ease-in-out infinite;
+  .ymaps-2-1-79-balloon__layout {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
   }
 
-  @keyframes svg-pulse-highlight {
-    0%, 100% {
-      opacity: 0;
-      r: 4;
-    }
-    50% {
-      opacity: 0.7;
-      r: 12;
-    }
+  .ymaps-2-1-79-balloon__content {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+
+  .ymaps-2-1-79-balloon__close-button {
+    display: none !important;
+  }
+
+  .ymaps-2-1-79-balloon__tail,
+  .ymaps-2-1-79-balloon__tail::after {
+    background: #1a1a2e !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .geo-balloon {
+    width: 260px;
+    background: #1a1a2e;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .geo-balloon-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(29, 122, 204, 0.1);
+    border-top: 2px solid #1D7ACC;
+  }
+
+  .geo-balloon-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .geo-balloon-close {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+    flex-shrink: 0;
+  }
+
+  .geo-balloon-close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .geo-balloon-body {
+    padding: 10px 14px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* Hide Yandex copyright area background for dark theme */
+  [class*="copyrights"] {
+    opacity: 0.4;
+  }
+
+  /* Zoom control dark styling */
+  .ymaps-2-1-79-zoom {
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+
+  .ymaps-2-1-79-zoom:hover {
+    opacity: 1;
   }
 </style>

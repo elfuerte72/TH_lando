@@ -24,6 +24,7 @@ export interface Location {
   name: string;
   lat: number;
   lng: number;
+  description?: string;
   highlight?: boolean;
 }
 
