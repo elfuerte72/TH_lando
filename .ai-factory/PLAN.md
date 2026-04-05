@@ -1,56 +1,108 @@
-# Plan: Обновление секции «География работ» — MapLibre GL JS
+# Plan: Мобильная адаптация лендинга Trak Holding
 
-**Branch:** feature/landing-page
-**Created:** 2026-03-31
 **Mode:** Fast
+**Created:** 2026-04-03
+**Testing:** Да
+**Logging:** Не требуется (CSS/HTML/JS правки)
+**Docs:** Нет
 
-## Settings
+## Результаты анализа
 
-- **Testing:** Нет
-- **Logging:** Standard
-- **Docs:** Нет
+Проведён глубокий аудит всех компонентов сайта на мобильную совместимость. Обнаружены проблемы по 4 категориям:
 
-## Overview
+### Критические (ломают layout)
+- Hero stats row переполняет viewport 360px (4 элемента × 80px + gap-12)
+- Fleet thumbnail nav переполняет 360px (368px минимум vs 344px доступно)
+- Видео `truck.mp4` — 63MB с `preload="auto"` — критически для мобильного интернета
+- `team.png` — 6.7MB без сжатия
 
-Заменить текстовую сетку локаций в секции Geography на интерактивную карту MapLibre GL JS с тайлами OpenFreeMap. 19 маркеров по координатам из `locations.ts`, тёмная тема, кастомные маркеры в стиле проекта.
+### Высокие (функциональная деградация)
+- `min-h-screen` вместо `dvh` — контент скрывается за iOS Safari chrome
+- CSS scroll-driven parallax не работает на iOS (все браузеры WebKit)
+- Scroll listeners без `{ passive: true }` — блокируют оптимизацию скролла
+- Fleet swipe без axis-locking — вертикальный скролл конфликтует с carousel
+
+### Средние (UX деградация)
+- Hamburger tap target ~40×28px (минимум 44×44px)
+- GSAP ScrollTrigger threshold 92% — может не сработать на коротких viewports
+- `group-hover:` залипает на iOS после тапа (нет `active:` альтернатив)
+- SVG карта labels ~4-5px — нечитабельно на мобильных
+- Lenis перехватывает touch-scroll, подавляет rubber-band на iOS
+
+### Низкие (косметические)
+- Footer `gap-10` — чрезмерно высокий footer на мобильных
+- Нет safe-area-insets для iPhone X+ home indicator
+- Нет poster на video
+- Fleet PNGs 575-818KB без WebP
 
 ## Tasks
 
-### Phase 1: Установка зависимостей
+### Phase 1: Критические исправления layout (Tasks 1-3)
 
-- [x] **Task 1:** Установить `maplibre-gl`
-  - `npm install maplibre-gl`
-  - Файлы: `package.json`, `package-lock.json`
+**Task 1: Оптимизация Hero секции** ✅
+- Файлы: `Hero.astro`, `global.css`
+- Stats row → `grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8`
+- `min-h-screen` → `min-h-[100dvh]` с fallback
+- Video: poster, `preload="metadata"`, рассмотреть мобильную версию
+- `pb-32` → `pb-24` на мобильных
 
-### Phase 2: Реализация карты
+**Task 2: Header мобильная доступность** ✅
+- Файл: `Header.astro`
+- Hamburger tap target → 44×44px
+- Phone link padding
+- `aria-expanded`, Escape handler
+- `{ passive: true }` на scroll listeners
+- `viewport-fit=cover` + safe-area-insets
 
-- [x] **Task 2:** Переписать `Geography.astro` — MapLibre карта вместо текстовой сетки
-  - Файлы: `src/components/sections/Geography.astro`
-  - Заменить `<div class="grid grid-cols-2 sm:grid-cols-3 ...">` на контейнер `<div id="geography-map">`
-  - В `<script>`:
-    - Импорт `maplibre-gl` и CSS
-    - Инициализация карты: OpenFreeMap dark tiles, центр ~63°N 70°E (ХМАО/ЯНАО), zoom 4
-    - Итерация по `locations` — добавление маркеров с попапами
-    - Highlight-маркер для Ковыктинского месторождения (другой цвет/размер)
-    - fitBounds для охвата всех точек
-  - Сохранить sidebar: «Новое направление» + «Секторы работы»
+**Task 3: Fleet карусель** ✅
+- Файл: `Fleet.astro`
+- Thumbnails: `w-16 sm:w-20 lg:w-24`, `gap-2 sm:gap-4`
+- Touch axis-locking
+- Specs table collapse на мобильных
+- `md:` промежуточный breakpoint
 
-- [x] **Task 3:** Стилизация карты под дизайн проекта
-  - Файлы: `src/components/sections/Geography.astro`, `src/styles/global.css` (при необходимости)
-  - Кастомные CSS-маркеры: пульсирующие точки accent-цвета (`#1D7ACC`)
-  - Highlight-маркер: отличающийся стиль (больше, другой цвет)
-  - Попапы: тёмный фон, шрифт Inter
-  - Адаптивность: мобильные — карта full-width, высота 300-400px; десктоп — в сетке 3/5
-  - Скрыть/минимизировать стандартные контролы MapLibre
-  - Опционально: GSAP ScrollTrigger для анимации появления секции
+### Phase 2: Производительность (Task 4)
+
+**Task 4: Оптимизация изображений** ✅
+- `team.png` → WebP < 300KB
+- Fleet PNG → WebP
+- Удалить дубликаты и unused файлы
+- `srcset`/`sizes` для responsive images
+- `<picture>` с media query для desktop-only элементов
+
+### Phase 3: Секции и взаимодействие (Tasks 5-7)
+
+**Task 5: Materials + Advantages** ✅
+- Download button tap target → 44px
+- `active:` variants для touch feedback
+- ScrollTrigger thresholds: 92%/90% → 85%
+
+**Task 6: Geography + About** ✅
+- SVG labels: скрыть/увеличить на мобильных
+- Card padding: `p-5 sm:p-8`
+- SVG pulse оптимизация
+
+**Task 7: Lenis + GSAP mobile** ✅
+- `smoothTouch: false` или отключение Lenis на мобильных
+- `{ passive: true }` для всех scroll listeners
+
+### Phase 4: Финал (Tasks 8-9)
+
+**Task 8: Footer + глобальные правки** ✅
+- `gap-6 md:gap-10`
+- Safe-area-insets
+- `{ passive: true }` на scroll listener
+
+**Task 9: Тестирование** *(blocked by 1-8)* ✅
+- Playwright тесты на viewport'ах: 360px, 375px, 390px, 768px
+- Landscape mode
+- Чек-лист из 12 пунктов
 
 ## Commit Plan
 
-Один коммит после завершения всех задач.
-
-## Tech Notes
-
-- **MapLibre GL JS:** ~210KB, WebGL vector tiles, BSD лицензия
-- **OpenFreeMap:** бесплатные тайлы без API-ключа, dark style доступен
-- **Данные:** координаты уже есть в `src/data/locations.ts` (lat/lng для всех 19 точек)
-- **Интеграция:** `<script>` блок в Astro-компоненте, как остальные секции проекта
+| Checkpoint | Tasks | Commit message |
+|---|---|---|
+| 1 | Tasks 1-3 | `fix: resolve critical mobile layout overflow issues in hero, header, fleet` |
+| 2 | Task 4 | `perf: optimize images — convert to WebP, add srcset, remove unused assets` |
+| 3 | Tasks 5-7 | `fix: improve mobile UX — touch targets, scroll thresholds, Lenis config` |
+| 4 | Tasks 8-9 | `fix: footer mobile spacing, safe-area-insets, and mobile testing` |

@@ -47,6 +47,7 @@ body {
   color: var(--color-white);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 /* Eliminate subpixel gaps between sections */
@@ -134,28 +135,30 @@ h1, h2, h3, h4, h5, h6 {
               0 0 80px rgba(29, 122, 204, 0.15);
 }
 
-/* ── Scroll-driven parallax (Chromium) ── */
-@supports (animation-timeline: scroll()) {
-  .hero-video {
-    animation: parallaxZoom linear;
-    animation-timeline: scroll();
-    animation-range: 0% 60%;
-  }
+/* ── Scroll-driven parallax (Chromium desktop only) ── */
+@media (min-width: 768px) {
+  @supports (animation-timeline: scroll()) {
+    .hero-video {
+      animation: parallaxZoom linear;
+      animation-timeline: scroll();
+      animation-range: 0% 60%;
+    }
 
-  @keyframes parallaxZoom {
-    from { transform: scale(1); }
-    to { transform: scale(1.12) translateY(-5%); }
-  }
+    @keyframes parallaxZoom {
+      from { transform: scale(1); }
+      to { transform: scale(1.12) translateY(-5%); }
+    }
 
-  .hero-content {
-    animation: fadeUpOnScroll linear;
-    animation-timeline: scroll();
-    animation-range: 0% 35%;
-  }
+    .hero-content {
+      animation: fadeUpOnScroll linear;
+      animation-timeline: scroll();
+      animation-range: 0% 35%;
+    }
 
-  @keyframes fadeUpOnScroll {
-    from { opacity: 1; transform: translateY(0); }
-    to { opacity: 0; transform: translateY(-50px); }
+    @keyframes fadeUpOnScroll {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-50px); }
+    }
   }
 }
 

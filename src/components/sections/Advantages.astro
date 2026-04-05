@@ -91,9 +91,11 @@ import { advantages, stats } from '@/data/stats';
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // ── 1. Background parallax ──
+  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+
+  // ── 1. Background parallax (desktop only — causes jank on mobile) ──
   const bgEl = document.querySelector('.advantages-bg');
-  if (bgEl) {
+  if (bgEl && isDesktop) {
     gsap.to(bgEl, {
       scrollTrigger: {
         trigger: '#advantages',
@@ -131,7 +133,7 @@ import { advantages, stats } from '@/data/stats';
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: '.stats-column',
-        start: 'top 88%',
+        start: 'top 85%',
         toggleActions: 'play none none none',
       },
       delay: i * 0.12,
@@ -179,7 +181,7 @@ import { advantages, stats } from '@/data/stats';
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: item,
-        start: 'top 92%',
+        start: 'top 85%',
         toggleActions: 'play none none none',
       },
     });

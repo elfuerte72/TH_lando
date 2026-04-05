@@ -10,7 +10,7 @@ import { navigation, contactInfo } from '@/data/stats';
         <!-- Logo -->
         <a href="#" class="flex items-center gap-2.5 shrink-0 group">
           <img src="/images/logo-th.png" alt="Трак Холдинг" class="h-6 lg:h-7 w-auto transition-opacity duration-300 group-hover:opacity-80" />
-          <span class="hidden sm:block text-white font-heading font-bold text-[13px] lg:text-sm tracking-[0.15em] uppercase">ТРАК ХОЛДИНГ</span>
+          <span class="text-white font-heading font-bold text-[13px] lg:text-sm tracking-[0.15em] uppercase">ТРАК ХОЛДИНГ</span>
         </a>
 
         <!-- Desktop Navigation -->
@@ -38,12 +38,18 @@ import { navigation, contactInfo } from '@/data/stats';
         <!-- Mobile Menu Button -->
         <button
           id="menu-toggle"
-          class="lg:hidden flex flex-col gap-1.5 p-2"
+          class="lg:hidden flex items-center justify-center w-11 h-11 -mr-2"
           aria-label="Открыть меню"
+          aria-expanded="false"
         >
-          <span class="w-6 h-0.5 bg-white transition-all duration-300 origin-center" id="bar1"></span>
-          <span class="w-6 h-0.5 bg-white transition-all duration-300" id="bar2"></span>
-          <span class="w-6 h-0.5 bg-white transition-all duration-300 origin-center" id="bar3"></span>
+          <!-- Hamburger icon -->
+          <svg id="icon-hamburger" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <!-- Close icon (hidden by default) -->
+          <svg id="icon-close" class="w-6 h-6 text-accent hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
       </div>
     </div>
@@ -114,34 +120,43 @@ import { navigation, contactInfo } from '@/data/stats';
 <script>
   const toggle = document.getElementById('menu-toggle');
   const menu = document.getElementById('mobile-menu');
-  const bar1 = document.getElementById('bar1');
-  const bar2 = document.getElementById('bar2');
-  const bar3 = document.getElementById('bar3');
+  const iconHamburger = document.getElementById('icon-hamburger');
+  const iconClose = document.getElementById('icon-close');
   const header = document.getElementById('header');
   let open = false;
+
+  function updateMenuIcon() {
+    iconHamburger?.classList.toggle('hidden', open);
+    iconClose?.classList.toggle('hidden', !open);
+  }
+
+  function closeMenu() {
+    open = false;
+    menu?.classList.add('hidden');
+    toggle?.setAttribute('aria-expanded', 'false');
+    updateMenuIcon();
+  }
 
   toggle?.addEventListener('click', () => {
     open = !open;
     menu?.classList.toggle('hidden', !open);
-    bar1!.style.transform = open ? 'rotate(45deg) translate(3px, 3px)' : '';
-    bar2!.style.opacity = open ? '0' : '1';
-    bar3!.style.transform = open ? 'rotate(-45deg) translate(3px, -3px)' : '';
+    toggle?.setAttribute('aria-expanded', String(open));
+    updateMenuIcon();
   });
 
   document.querySelectorAll('.mobile-link').forEach(link => {
-    link.addEventListener('click', () => {
-      open = false;
-      menu?.classList.add('hidden');
-      bar1!.style.transform = '';
-      bar2!.style.opacity = '1';
-      bar3!.style.transform = '';
-    });
+    link.addEventListener('click', closeMenu);
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && open) closeMenu();
   });
 
   // Transparent → solid header on scroll
   window.addEventListener('scroll', () => {
     header?.classList.toggle('scrolled', window.scrollY > 60);
-  });
+  }, { passive: true });
 
   // Active nav link on scroll
   const sections = document.querySelectorAll('section[id]');

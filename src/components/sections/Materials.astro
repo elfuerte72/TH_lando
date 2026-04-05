@@ -12,7 +12,7 @@ import { materials } from '@/data/materials';
   <!-- Decorative truck image — right side, desktop only -->
   <div id="materials-truck" class="hidden lg:block absolute right-[-120px] xl:right-[-60px] top-2 w-[520px] xl:w-[580px] h-[360px] pointer-events-none overflow-hidden" style="z-index: 1; -webkit-mask-image: linear-gradient(to right, transparent 0%, black 30%, black 100%); mask-image: linear-gradient(to right, transparent 0%, black 30%, black 100%);">
     <img
-      src="/images/materials/truck-side.png"
+      src="/images/materials/truck-side.webp"
       alt=""
       class="w-full h-full object-contain object-center opacity-70"
       loading="lazy"
@@ -40,17 +40,17 @@ import { materials } from '@/data/materials';
     <!-- Materials Grid -->
     <div id="materials-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-3">
       {materials.map((material) => (
-        <article class="material-card group relative rounded-xl overflow-hidden border border-white/[0.06] hover:border-accent/30 transition-all duration-500 hover:translate-y-[-2px] h-[120px] lg:h-[140px]">
+        <article class="material-card group relative rounded-xl overflow-hidden border border-white/[0.06] hover:border-accent/30 active:border-accent/40 transition-all duration-500 hover:translate-y-[-2px] active:scale-[0.98] h-[160px] sm:h-[140px] lg:h-[140px]">
           <!-- Material photo background -->
           <div class="absolute inset-0">
             <img
               src={material.image}
               alt={material.name}
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              class="w-full h-full object-cover sm:transition-transform sm:duration-700 sm:group-hover:scale-110"
               loading="lazy"
             />
             <!-- Minimal overlay only at bottom for text readability -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20"></div>
             <!-- Accent tint on hover -->
             <div class="absolute inset-0 bg-accent/0 group-hover:bg-accent/[0.06] transition-all duration-500"></div>
           </div>
@@ -96,7 +96,7 @@ import { materials } from '@/data/materials';
         <p class="text-gray-sub text-sm leading-relaxed">
           Одна из&nbsp;немногих компаний в&nbsp;регионе. Сбор, транспортирование, обработка, утилизация, обезвреживание и&nbsp;размещение отходов.
         </p>
-        <a href="/docs/license.pdf" download="Лицензия_ТракХолдинг.pdf" class="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-lg bg-accent/10 hover:bg-accent/20 border border-accent/20 text-accent text-sm font-semibold transition-all duration-200">
+        <a href="/docs/license.pdf" download="Лицензия_ТракХолдинг.pdf" class="inline-flex items-center gap-2 mt-3 px-4 py-2.5 min-h-[44px] rounded-lg bg-accent/10 hover:bg-accent/20 active:bg-accent/30 border border-accent/20 text-accent text-sm font-semibold transition-all duration-200">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke-linecap="round" stroke-linejoin="round"/>
             <polyline points="7 10 12 15 17 10" stroke-linecap="round" stroke-linejoin="round"/>
@@ -117,8 +117,10 @@ import { materials } from '@/data/materials';
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // Truck drive-in animation — slides from off-screen left to its position
-  gsap.from('#materials-truck', {
+  const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+
+  // Truck drive-in animation — desktop only (element is hidden on mobile)
+  if (isDesktop) gsap.from('#materials-truck', {
     scrollTrigger: {
       trigger: '#materials',
       start: 'top 85%',
@@ -146,7 +148,7 @@ import { materials } from '@/data/materials';
   gsap.from('.material-card', {
     scrollTrigger: {
       trigger: '#materials-grid',
-      start: 'top 90%',
+      start: 'top 85%',
       toggleActions: 'play none none none',
     },
     y: 30,
@@ -159,7 +161,7 @@ import { materials } from '@/data/materials';
   gsap.from('.license-badge', {
     scrollTrigger: {
       trigger: '.license-badge',
-      start: 'top 90%',
+      start: 'top 85%',
       toggleActions: 'play none none none',
     },
     y: 20,

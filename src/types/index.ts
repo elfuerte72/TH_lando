@@ -1,17 +1,14 @@
 export interface Vehicle {
   name: string;
-  type?: string;
-  year: string;
   capacity: number;
   volume: number;
   drive: string;
-  count: number;
   image: string;
-  engine?: string;
-  fuel?: string;
-  bodyType?: string;
-  grossWeight?: number;
-  description?: string;
+  engine: string;
+  fuel: string;
+  bodyType: string;
+  grossWeight: number;
+  description: string;
 }
 
 export interface Material {
@@ -41,7 +38,8 @@ export interface NavLink {
 
 export interface ContactInfo {
   phone: string;
-  whatsapp: string;
+  phoneRaw: string;
   email: string;
+  whatsapp: string;
   schedule: string;
 }

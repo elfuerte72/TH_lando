@@ -13,7 +13,7 @@ import About from '@/components/sections/About.astro';
 <html lang="ru">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Трак Холдинг — Сила в движении | Перевозка сыпучих грузов ХМАО ЯНАО</title>
     <meta name="description" content="ООО Трак Холдинг — перевозка сыпучих грузов по ХМАО, ЯНАО и Западной Сибири. Собственный автопарк из 11 самосвалов. Работаем с 2013 года. Вывоз бурового шлама, щебень, песок, грунт." />
     <meta name="keywords" content="перевозка сыпучих грузов ХМАО ЯНАО, самосвалы Тюмень, вывоз бурового шлама, перевозка щебня, перевозка песка, грузоперевозки Западная Сибирь" />
@@ -44,29 +44,48 @@ import About from '@/components/sections/About.astro';
 
       gsap.registerPlugin(ScrollTrigger);
 
-      // ── Lenis smooth scroll ──
-      const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
-      });
+      // Detect mobile/touch device
+      const isMobile = window.matchMedia('(max-width: 767px)').matches
+        || 'ontouchstart' in window;
 
-      // Sync Lenis with GSAP ScrollTrigger
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add((time) => lenis.raf(time * 1000));
-      gsap.ticker.lagSmoothing(0);
-
-      // Handle anchor links with Lenis
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', (e) => {
-          const href = (e.currentTarget as HTMLAnchorElement).getAttribute('href');
-          if (href && href !== '#') {
-            e.preventDefault();
-            const target = document.querySelector(href);
-            if (target) lenis.scrollTo(target as HTMLElement);
-          }
+      // ── Lenis smooth scroll (desktop only) ──
+      // On mobile, Lenis causes scroll jank, rubber-band conflicts, and "jump-back" issues on iOS
+      if (!isMobile) {
+        const lenis = new Lenis({
+          duration: 1.2,
+          easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel: true,
         });
-      });
+
+        // Sync Lenis with GSAP ScrollTrigger
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => lenis.raf(time * 1000));
+        gsap.ticker.lagSmoothing(0);
+
+        // Handle anchor links with Lenis
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', (e) => {
+            const href = (e.currentTarget as HTMLAnchorElement).getAttribute('href');
+            if (href && href !== '#') {
+              e.preventDefault();
+              const target = document.querySelector(href);
+              if (target) lenis.scrollTo(target as HTMLElement);
+            }
+          });
+        });
+      } else {
+        // Mobile: native smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', (e) => {
+            const href = (e.currentTarget as HTMLAnchorElement).getAttribute('href');
+            if (href && href !== '#') {
+              e.preventDefault();
+              const target = document.querySelector(href);
+              if (target) target.scrollIntoView({ behavior: 'smooth' });
+            }
+          });
+        });
+      }
 
     </script>
   </body>

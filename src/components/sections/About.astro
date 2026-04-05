@@ -6,7 +6,7 @@
   <!-- LAYER 1: Background photo with vignette -->
   <div class="absolute inset-0">
     <img
-      src="/images/about/team.png"
+      src="/images/about/team.webp"
       alt=""
       loading="lazy"
       class="about-bg w-full h-full object-cover"
@@ -67,9 +67,11 @@
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // Background parallax
+  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+
+  // Background parallax (desktop only — causes jank on mobile)
   const bgEl = document.querySelector('.about-bg');
-  if (bgEl) {
+  if (bgEl && isDesktop) {
     gsap.to(bgEl, {
       scrollTrigger: {
         trigger: '#about',
@@ -104,7 +106,7 @@
     gsap.from(p, {
       scrollTrigger: {
         trigger: p,
-        start: 'top 90%',
+        start: 'top 85%',
         toggleActions: 'play none none none',
       },
       y: 25,

@@ -1,7 +1,7 @@
 ---
 ---
 
-<section id="hero" class="relative min-h-screen flex items-center overflow-hidden">
+<section id="hero" class="relative min-h-[100dvh] min-h-[100vh] flex items-center overflow-hidden">
   <!-- Video Background -->
   <div class="absolute inset-0">
     <video
@@ -9,8 +9,9 @@
       muted
       loop
       playsinline
-      preload="auto"
-      class="hero-video absolute inset-0 w-full h-full object-cover will-change-transform"
+      preload="metadata"
+      poster="/video/truck-poster.jpg"
+      class="hero-video absolute inset-0 w-full h-full object-cover md:will-change-transform"
     >
       <source src="/video/truck.mp4" type="video/mp4" />
     </video>
@@ -21,7 +22,7 @@
   <div class="absolute inset-0 z-[1]" style="background: linear-gradient(to right, rgba(10,10,13,0.85) 0%, rgba(10,10,13,0.55) 45%, transparent 70%);"></div>
 
   <!-- Content -->
-  <div class="hero-content relative z-10 max-w-[var(--container-max-width)] mx-auto px-4 sm:px-6 lg:px-8 pt-28 lg:pt-32 pb-32 lg:pb-36 w-full">
+  <div class="hero-content relative z-10 max-w-[var(--container-max-width)] mx-auto px-4 sm:px-6 lg:px-8 pt-28 lg:pt-32 pb-40 sm:pb-32 lg:pb-36 w-full">
     <div class="max-w-4xl">
 
       <!-- Main heading — staggered text reveal -->
@@ -55,22 +56,22 @@
   <!-- Stats row — centered, full width, at the bottom -->
   <div class="hero-fade hero-fade-4 absolute bottom-0 left-0 right-0 z-10">
     <div class="max-w-[var(--container-max-width)] mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-center gap-12 lg:gap-20 py-8 border-t border-white/[0.08]">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8 lg:gap-20 py-6 sm:py-8 border-t border-white/[0.08]">
         <div class="text-center">
-          <div class="text-2xl lg:text-3xl font-heading font-extrabold text-white tracking-tight">2013</div>
-          <div class="text-gray-dim text-xs mt-1 tracking-wider uppercase">основание компании</div>
+          <div class="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-white tracking-tight">2013</div>
+          <div class="text-gray-dim text-[10px] sm:text-xs mt-1 tracking-wider uppercase">основание компании</div>
         </div>
         <div class="text-center">
-          <div class="text-2xl lg:text-3xl font-heading font-extrabold text-white tracking-tight">24/7</div>
-          <div class="text-gray-dim text-xs mt-1 tracking-wider uppercase">без выходных</div>
+          <div class="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-white tracking-tight">24/7</div>
+          <div class="text-gray-dim text-[10px] sm:text-xs mt-1 tracking-wider uppercase">без выходных</div>
         </div>
         <div class="text-center">
-          <div class="text-2xl lg:text-3xl font-heading font-extrabold text-white tracking-tight">6×6</div>
-          <div class="text-gray-dim text-xs mt-1 tracking-wider uppercase">полный привод</div>
+          <div class="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-white tracking-tight">6×6</div>
+          <div class="text-gray-dim text-[10px] sm:text-xs mt-1 tracking-wider uppercase">полный привод</div>
         </div>
         <div class="text-center">
-          <div class="text-2xl lg:text-3xl font-heading font-extrabold text-accent tracking-tight">I–IV</div>
-          <div class="text-gray-dim text-xs mt-1 tracking-wider uppercase">класс опасности</div>
+          <div class="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-accent tracking-tight">I–IV</div>
+          <div class="text-gray-dim text-[10px] sm:text-xs mt-1 tracking-wider uppercase">класс опасности</div>
         </div>
       </div>
     </div>

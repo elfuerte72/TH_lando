@@ -18,8 +18,9 @@ export const advantages = [
 
 export const contactInfo = {
   phone: '8 (922) 261-28-54',
-  whatsapp: '89222612854',
+  phoneRaw: '89222612854',
   email: '89222612854@mail.ru',
+  whatsapp: 'https://wa.me/79222612854',
   schedule: 'Круглосуточно, без выходных',
 };
 
@@ -27,5 +28,6 @@ export const navigation = [
   { label: 'Автопарк', href: '#fleet' },
   { label: 'Услуги', href: '#materials' },
   { label: 'Преимущества', href: '#advantages' },
+  { label: 'Регионы', href: '#geography' },
   { label: 'О компании', href: '#about' },
 ];
