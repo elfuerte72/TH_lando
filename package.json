@@ -12,6 +12,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "overrides": {
+    "vite": "^7"
+  },
   "dependencies": {
     "@astrojs/check": "^0.9.8",
     "@rolldown/binding-darwin-arm64": "^1.0.0-rc.12",
