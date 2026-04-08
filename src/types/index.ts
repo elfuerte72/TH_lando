@@ -40,6 +40,6 @@ export interface ContactInfo {
   phone: string;
   phoneRaw: string;
   email: string;
-  whatsapp: string;
+  max: string;
   schedule: string;
 }

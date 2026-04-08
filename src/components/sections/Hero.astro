@@ -2,19 +2,21 @@
 ---
 
 <section id="hero" class="relative min-h-[100dvh] min-h-[100vh] flex items-center overflow-hidden">
-  <!-- Video Background -->
-  <div class="absolute inset-0">
+  <!-- Video Background — poster as CSS bg fallback (avoids iOS native play button) -->
+  <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/video/truck-poster.jpg');">
     <video
+      id="hero-video"
+      src="/video/truck-mobile.mp4"
       autoplay
       muted
       loop
       playsinline
-      preload="metadata"
-      poster="/video/truck-poster.jpg"
+      webkit-playsinline
+      disablepictureinpicture
+      disableremoteplayback
+      preload="auto"
       class="hero-video absolute inset-0 w-full h-full object-cover md:will-change-transform"
-    >
-      <source src="https://1kq9ppdwucmvl2un.public.blob.vercel-storage.com/truck.mp4" type="video/mp4" />
-    </video>
+    ></video>
   </div>
 
   <!-- Cinematic overlays — strong left side so text always readable -->
@@ -43,11 +45,7 @@
           href="#fleet"
           class="inline-flex items-center justify-center gap-3 border border-white/15 hover:border-white/30 text-white font-heading font-semibold text-lg uppercase tracking-wider px-10 py-4.5 rounded-lg transition-all duration-300 hover:bg-white/[0.04] backdrop-blur-sm"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span>Смотреть автопарк</span>
+          Смотреть автопарк
         </a>
       </div>
     </div>
@@ -70,10 +68,57 @@
           <div class="text-gray-dim text-[10px] sm:text-xs mt-1 tracking-wider uppercase">полный привод</div>
         </div>
         <div class="text-center">
-          <div class="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-accent tracking-tight">I–IV</div>
+          <div class="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-accent tracking-tight">III–IV</div>
           <div class="text-gray-dim text-[10px] sm:text-xs mt-1 tracking-wider uppercase">класс опасности</div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  const video = document.getElementById('hero-video') as HTMLVideoElement | null;
+  if (video) {
+    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+
+    // Desktop: upgrade to HD version (mobile 720p is already in HTML src for instant autoplay)
+    if (isDesktop) {
+      video.src = 'https://1kq9ppdwucmvl2un.public.blob.vercel-storage.com/truck.mp4';
+      video.load();
+    }
+
+    function tryPlay() {
+      video!.muted = true;
+      video!.play().catch(() => {});
+    }
+
+    // Try as soon as browser has enough data
+    video.addEventListener('canplay', tryPlay, { once: true });
+
+    // Fallback: retry on first user gesture (covers iOS Low Power Mode / Data Saver)
+    function onGesture() {
+      tryPlay();
+      document.removeEventListener('touchstart', onGesture);
+      document.removeEventListener('click', onGesture);
+      document.removeEventListener('scroll', onGesture);
+    }
+    document.addEventListener('touchstart', onGesture, { passive: true });
+    document.addEventListener('click', onGesture, { once: true });
+    document.addEventListener('scroll', onGesture, { passive: true, once: true });
+
+    // On mobile: pause when hero leaves viewport to free GPU for smooth scrolling
+    if (!isDesktop) {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            video!.play().catch(() => {});
+          } else {
+            video!.pause();
+          }
+        },
+        { threshold: 0.05 }
+      );
+      observer.observe(video.closest('section')!);
+    }
+  }
+</script>

@@ -122,6 +122,12 @@ export const locations: Location[] = [
     description: 'Карьеры по добыче россыпного золота. Перевозка огромных объёмов золотого песка.',
   },
   {
+    name: 'Нягань',
+    lat: 62.14,
+    lng: 65.39,
+    description: 'Талинское нефтяное месторождение. Транспортировка щебня с Ж/Д тупика.',
+  },
+  {
     name: 'Ковыктинское месторождение',
     lat: 54.17,
     lng: 105.72,
@@ -131,8 +137,8 @@ export const locations: Location[] = [
 ];
 
 export const sectors = [
-  { name: 'Нефтяники', icon: 'oil' },
-  { name: 'Дорожники', icon: 'road' },
-  { name: 'Строители', icon: 'building' },
-  { name: 'Заводы', icon: 'factory' },
+  { name: 'Нефтегазовые компании', icon: 'oil' },
+  { name: 'Дорожники и Строители', icon: 'road' },
+  { name: 'Заводы и Карьеры', icon: 'factory' },
+  { name: 'Администрации и Частные лица', icon: 'people' },
 ] as const;
