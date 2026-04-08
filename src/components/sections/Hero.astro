@@ -3,21 +3,7 @@
 
 <section id="hero" class="relative min-h-[100dvh] min-h-[100vh] flex items-center overflow-hidden">
   <!-- Video Background — poster as CSS bg fallback (avoids iOS native play button) -->
-  <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/video/truck-poster.jpg');">
-    <video
-      id="hero-video"
-      src="/video/truck-mobile.mp4"
-      autoplay
-      muted
-      loop
-      playsinline
-      webkit-playsinline
-      disablepictureinpicture
-      disableremoteplayback
-      preload="auto"
-      class="hero-video absolute inset-0 w-full h-full object-cover md:will-change-transform"
-    ></video>
-  </div>
+  <div id="hero-bg" class="absolute inset-0 bg-cover bg-center" style="background-image: url('/video/truck-poster.jpg');"></div>
 
   <!-- Cinematic overlays — strong left side so text always readable -->
   <div class="absolute inset-0 bg-gradient-to-b from-dark/60 via-dark/15 to-dark z-[1]"></div>
@@ -77,48 +63,39 @@
 </section>
 
 <script>
-  const video = document.getElementById('hero-video') as HTMLVideoElement | null;
-  if (video) {
-    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
 
-    // Desktop: upgrade to HD version (mobile 720p is already in HTML src for instant autoplay)
-    if (isDesktop) {
+  if (isDesktop) {
+    const bg = document.getElementById('hero-bg');
+    if (bg) {
+      const video = document.createElement('video');
       video.src = 'https://1kq9ppdwucmvl2un.public.blob.vercel-storage.com/truck.mp4';
-      video.load();
-    }
+      video.autoplay = true;
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.disablePictureInPicture = true;
+      video.disableRemotePlayback = true;
+      video.preload = 'auto';
+      video.className = 'hero-video absolute inset-0 w-full h-full object-cover will-change-transform';
+      bg.appendChild(video);
 
-    function tryPlay() {
-      video!.muted = true;
-      video!.play().catch(() => {});
-    }
+      function tryPlay() {
+        video.muted = true;
+        video.play().catch(() => {});
+      }
 
-    // Try as soon as browser has enough data
-    video.addEventListener('canplay', tryPlay, { once: true });
+      video.addEventListener('canplay', tryPlay, { once: true });
 
-    // Fallback: retry on first user gesture (covers iOS Low Power Mode / Data Saver)
-    function onGesture() {
-      tryPlay();
-      document.removeEventListener('touchstart', onGesture);
-      document.removeEventListener('click', onGesture);
-      document.removeEventListener('scroll', onGesture);
-    }
-    document.addEventListener('touchstart', onGesture, { passive: true });
-    document.addEventListener('click', onGesture, { once: true });
-    document.addEventListener('scroll', onGesture, { passive: true, once: true });
-
-    // On mobile: pause when hero leaves viewport to free GPU for smooth scrolling
-    if (!isDesktop) {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            video!.play().catch(() => {});
-          } else {
-            video!.pause();
-          }
-        },
-        { threshold: 0.05 }
-      );
-      observer.observe(video.closest('section')!);
+      function onGesture() {
+        tryPlay();
+        document.removeEventListener('touchstart', onGesture);
+        document.removeEventListener('click', onGesture);
+        document.removeEventListener('scroll', onGesture);
+      }
+      document.addEventListener('touchstart', onGesture, { passive: true });
+      document.addEventListener('click', onGesture, { once: true });
+      document.addEventListener('scroll', onGesture, { passive: true, once: true });
     }
   }
 </script>

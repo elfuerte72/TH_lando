@@ -31,7 +31,9 @@ import { navigation, contactInfo } from '@/data/stats';
             <img src="/images/max-logo.webp" alt="MAX" class="w-5 h-5 rounded" />
           </a>
           <a
-            href={`tel:${contactInfo.phone.replace(/[\s()-]/g, '')}`}
+            href={contactInfo.max}
+            target="_blank"
+            rel="noopener noreferrer"
             class="text-white/60 hover:text-white text-sm font-medium tracking-wide transition-colors"
           >
             {contactInfo.phone}
@@ -74,7 +76,7 @@ import { navigation, contactInfo } from '@/data/stats';
           <a href={contactInfo.max} target="_blank" rel="noopener noreferrer" class="inline-flex shrink-0 hover:opacity-80 transition-opacity" title="Написать в MAX">
             <img src="/images/max-logo.webp" alt="MAX" class="w-6 h-6 rounded" />
           </a>
-          <a href={`tel:${contactInfo.phone.replace(/[\s()-]/g, '')}`} class="text-white text-lg">
+          <a href={contactInfo.max} target="_blank" rel="noopener noreferrer" class="text-white text-lg">
             {contactInfo.phone}
           </a>
         </div>

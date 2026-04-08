@@ -20,7 +20,7 @@ export const contactInfo = {
   phone: '8 (922) 261-28-54',
   phoneRaw: '89222612854',
   email: '89222612854@mail.ru',
-  max: 'https://max.ru/',
+  max: 'https://max.ru/u/f9LHodD0cOIS3DjlFBdFHmC2b1kVJDioQaRKJhHhCB_RHzuT-oHfEyL2gV8',
   schedule: 'Круглосуточно, без выходных',
 };
 
