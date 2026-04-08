@@ -26,7 +26,10 @@ import { navigation, contactInfo } from '@/data/stats';
         </nav>
 
         <!-- Phone + CTA -->
-        <div class="hidden lg:flex items-center gap-5">
+        <div class="hidden lg:flex items-center gap-2">
+          <a href={contactInfo.max} target="_blank" rel="noopener noreferrer" class="inline-flex shrink-0 hover:opacity-80 transition-opacity" title="Написать в MAX">
+            <img src="/images/max-logo.webp" alt="MAX" class="w-5 h-5 rounded" />
+          </a>
           <a
             href={`tel:${contactInfo.phone.replace(/[\s()-]/g, '')}`}
             class="text-white/60 hover:text-white text-sm font-medium tracking-wide transition-colors"
@@ -67,9 +70,14 @@ import { navigation, contactInfo } from '@/data/stats';
         </a>
       ))}
       <div class="pt-4 mt-4 border-t border-white/5 space-y-3">
-        <a href={`tel:${contactInfo.phone.replace(/[\s()-]/g, '')}`} class="block text-white text-lg px-4">
-          {contactInfo.phone}
-        </a>
+        <div class="flex items-center gap-3 px-4">
+          <a href={contactInfo.max} target="_blank" rel="noopener noreferrer" class="inline-flex shrink-0 hover:opacity-80 transition-opacity" title="Написать в MAX">
+            <img src="/images/max-logo.webp" alt="MAX" class="w-6 h-6 rounded" />
+          </a>
+          <a href={`tel:${contactInfo.phone.replace(/[\s()-]/g, '')}`} class="text-white text-lg">
+            {contactInfo.phone}
+          </a>
+        </div>
       </div>
     </div>
   </div>
