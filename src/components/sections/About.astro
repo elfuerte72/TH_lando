@@ -9,6 +9,7 @@
       src="/images/about/team.webp"
       alt=""
       loading="lazy"
+      decoding="async"
       class="about-bg w-full h-full object-cover"
       style="object-position: 50% 45%;"
     />
@@ -51,7 +52,6 @@
   .about-bg {
     -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 35%, transparent 100%);
     mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 35%, transparent 100%);
-    will-change: transform;
     filter: brightness(0.85);
   }
 </style>
@@ -72,9 +72,9 @@
         trigger: '#about',
         start: 'top bottom',
         end: 'bottom top',
-        scrub: 0.8,
+        scrub: 2,
       },
-      y: -60,
+      y: -40,
       ease: 'none',
     });
   }

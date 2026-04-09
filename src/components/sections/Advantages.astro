@@ -7,9 +7,10 @@ import { advantages, stats } from '@/data/stats';
   <!-- LAYER 1: Background photo with vignette -->
   <div class="absolute inset-0">
     <img
-      src="/images/advantages/bg-excavator.jpg"
+      src="/images/advantages/bg-excavator.webp"
       alt=""
       loading="lazy"
+      decoding="async"
       class="advantages-bg w-full h-full object-cover"
       style="object-position: 50% 40%;"
     />
@@ -80,7 +81,6 @@ import { advantages, stats } from '@/data/stats';
   .advantages-bg {
     -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 35%, transparent 100%);
     mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 35%, transparent 100%);
-    will-change: transform;
     filter: saturate(0.3) brightness(0.8);
   }
 </style>
@@ -101,9 +101,9 @@ import { advantages, stats } from '@/data/stats';
         trigger: '#advantages',
         start: 'top bottom',
         end: 'bottom top',
-        scrub: 0.8,
+        scrub: 2,
       },
-      y: -60,
+      y: -40,
       ease: 'none',
     });
   }
