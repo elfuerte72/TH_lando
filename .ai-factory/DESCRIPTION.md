@@ -1,51 +1,39 @@
 # Project: Trak Holding Landing Page
 
 ## Overview
-One-page landing website for "Trak Holding" LLC — a trucking company specializing in bulk cargo transportation across Western Siberia and the Far North (KHMAO, YANAO). Industrial Premium style: dark theme, bold typography, minimal text, maximum visuals.
+One-page cinematic landing site for Trak Holding LLC — a bulk cargo transportation company operating in Russia. Dark industrial design with smooth scroll animations and interactive elements.
 
 ## Core Features
-- Hero section with looped AI-generated background video, dark overlay
-- Fleet showcase: horizontal slider/grid with 5 vehicle types (11 units total)
-- Materials transported: 6 card grid with macro texture photos
-- Statistics with scroll-triggered counter animations
-- Interactive geography map with work locations across Western Siberia
-- Company about section
-- Contact form with Telegram bot integration for lead capture
-- Fixed navigation, smooth scroll, back-to-top button
-- License badge: hazardous waste classes I-IV
+- Hero section with video background and animated text reveals
+- Fleet showcase carousel with keyboard/touch controls
+- Materials transported — visual grid with hover effects
+- Competitive advantages with animated counters
+- Geography section with interactive SVG map of Russia (build-time rendered)
+- About/contact section with company information
 
 ## Tech Stack
 - **Language:** TypeScript
-- **Framework:** Astro (SSG)
-- **Styling:** Tailwind CSS v4
-- **Animations:** CSS + minimal JS (scroll-triggered counters)
-- **Form backend:** Telegram Bot API (serverless function)
-- **Hosting:** Vercel (static deployment)
-- **Map:** Yandex Maps API or static SVG map
-
-## Design System
-- **Dark background:** `#111827`
-- **Blue accent:** `#1D7ACC`
-- **White text:** `#FFFFFF`
-- **Gray subtext:** `#94A3B8`
-- **Card background:** `#1E293B`
-- **Style:** Industrial Premium — dark theme, powerful typography
+- **Framework:** Astro 6 (SSG mode)
+- **Styling:** Tailwind CSS v4 (design tokens via CSS custom properties)
+- **Animations:** GSAP 3 + ScrollTrigger, CSS keyframes, Lenis smooth scroll
+- **Build:** Vite 7 (via Astro)
+- **Deployment:** Amvera Cloud (nginx via Docker, static)
 
 ## Architecture Notes
-- Static site generation (SSG) — no server-side runtime
-- 7 screen sections, each as an Astro component
-- Lazy-loaded video and optimized images
-- Form submission via Telegram Bot API (Vercel serverless function or direct API call)
-- SEO meta tags for regional search queries
-- Mobile-first responsive design
-
-## Non-Functional Requirements
-- Performance: Lighthouse score 90+, lazy video/image loading
-- SEO: meta tags for "перевозка сыпучих грузов ХМАО ЯНАО", "самосвалы Тюмень", "вывоз бурового шлама"
-- Accessibility: semantic HTML, proper heading hierarchy
-- Responsive: mobile, tablet, desktop breakpoints
-- Favicon from company logo (TX)
+- Single-page composition: 6 section components assembled in `index.astro`
+- Data layer: typed arrays in `src/data/` with interfaces in `src/types/`
+- No CMS, no content collections, no server-side functions
+- Client-side JS via Astro `<script>` tags (no `client:` directives)
+- Lenis ↔ GSAP sync is critical for scroll animations
+- Geography SVG map uses build-time `node:fs` + affine projection
 
 ## Architecture
 See `.ai-factory/ARCHITECTURE.md` for detailed architecture guidelines.
-Pattern: Component-Based Static Site (Layered)
+Pattern: Layered Architecture
+
+## Non-Functional Requirements
+- All user-facing text in Russian
+- Mobile-first responsive design
+- Performance: static SSG output, no runtime server
+- Browser compatibility: CSS polyfills for older browsers
+- Accessibility: semantic HTML sections with anchor navigation

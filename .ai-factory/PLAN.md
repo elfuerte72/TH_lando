@@ -1,108 +1,83 @@
-# Plan: Мобильная адаптация лендинга Trak Holding
+# Plan: Миграция деплоя с Vercel на Amvera Cloud
 
 **Mode:** Fast
-**Created:** 2026-04-03
-**Testing:** Да
-**Logging:** Не требуется (CSS/HTML/JS правки)
-**Docs:** Нет
+**Created:** 2026-04-10
+**Description:** Настроить проект для деплоя на российский сервер Amvera Cloud с автодеплоем из GitHub. Текущий деплой на Vercel не подходит территориально.
 
-## Результаты анализа
+## Settings
+- **Testing:** Нет
+- **Logging:** Minimal (деплой-конфигурация)
+- **Docs:** Да, обновить
 
-Проведён глубокий аудит всех компонентов сайта на мобильную совместимость. Обнаружены проблемы по 4 категориям:
+## Context
 
-### Критические (ломают layout)
-- Hero stats row переполняет viewport 360px (4 элемента × 80px + gap-12)
-- Fleet thumbnail nav переполняет 360px (368px минимум vs 344px доступно)
-- Видео `truck.mp4` — 63MB с `preload="auto"` — критически для мобильного интернета
-- `team.png` — 6.7MB без сжатия
+**Проблема:** Vercel территориально не подходит — серверы за рубежом. Нужен российский хостинг для лучшей скорости и доступности в РФ.
 
-### Высокие (функциональная деградация)
-- `min-h-screen` вместо `dvh` — контент скрывается за iOS Safari chrome
-- CSS scroll-driven parallax не работает на iOS (все браузеры WebKit)
-- Scroll listeners без `{ passive: true }` — блокируют оптимизацию скролла
-- Fleet swipe без axis-locking — вертикальный скролл конфликтует с carousel
+**Решение:** Amvera Cloud (amvera.ru) — российский PaaS с Git-push деплоем, поддержкой nginx для статики, GitHub-интеграцией.
 
-### Средние (UX деградация)
-- Hamburger tap target ~40×28px (минимум 44×44px)
-- GSAP ScrollTrigger threshold 92% — может не сработать на коротких viewports
-- `group-hover:` залипает на iOS после тапа (нет `active:` альтернатив)
-- SVG карта labels ~4-5px — нечитабельно на мобильных
-- Lenis перехватывает touch-scroll, подавляет rubber-band на iOS
+**Текущее состояние:**
+- Проект — Astro 6 SSG, билд выдаёт статику в `dist/`
+- Билд команда: `npm run build` (включает postbuild-css.mjs для совместимости с браузерами)
+- Нет привязки к Vercel в коде (нет vercel.json, нет Vercel-специфичных API)
+- GitHub remote: `origin https://github.com/elfuerte72/TH_lando.git`
 
-### Низкие (косметические)
-- Footer `gap-10` — чрезмерно высокий footer на мобильных
-- Нет safe-area-insets для iPhone X+ home indicator
-- Нет poster на video
-- Fleet PNGs 575-818KB без WebP
+**Подход:** amvera.yml (нативный конфиг) + GitHub → Amvera автодеплой через дашборд.
+
+---
 
 ## Tasks
 
-### Phase 1: Критические исправления layout (Tasks 1-3)
+### Phase 1: Конфигурация Amvera
 
-**Task 1: Оптимизация Hero секции** ✅
-- Файлы: `Hero.astro`, `global.css`
-- Stats row → `grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8`
-- `min-h-screen` → `min-h-[100dvh]` с fallback
-- Video: poster, `preload="metadata"`, рассмотреть мобильную версию
-- `pb-32` → `pb-24` на мобильных
+#### Task 1: Создать amvera.yml ✅
+**Files:** `amvera.yml` (новый), `Dockerfile` (новый)
 
-**Task 2: Header мобильная доступность** ✅
-- Файл: `Header.astro`
-- Hamburger tap target → 44×44px
-- Phone link padding
-- `aria-expanded`, Escape handler
-- `{ passive: true }` на scroll listeners
-- `viewport-fit=cover` + safe-area-insets
+Создать конфигурацию для Amvera Cloud:
+- Среда: nginx (для раздачи статики)
+- Тулчейн: Node.js 20
+- Билд: `npm install` → `npm run build`
+- Статическая директория: `dist/`
+- Порт: 80
 
-**Task 3: Fleet карусель** ✅
-- Файл: `Fleet.astro`
-- Thumbnails: `w-16 sm:w-20 lg:w-24`, `gap-2 sm:gap-4`
-- Touch axis-locking
-- Specs table collapse на мобильных
-- `md:` промежуточный breakpoint
+> Использован Dockerfile-подход вместо browser toolchain — для поддержки кастомного nginx.conf.
 
-### Phase 2: Производительность (Task 4)
+#### Task 2: Создать nginx.conf
+**Files:** `nginx.conf` (новый)
 
-**Task 4: Оптимизация изображений** ✅
-- `team.png` → WebP < 300KB
-- Fleet PNG → WebP
-- Удалить дубликаты и unused файлы
-- `srcset`/`sizes` для responsive images
-- `<picture>` с media query для desktop-only элементов
+Кастомный nginx конфиг для:
+- Gzip-сжатие (html, css, js, svg, json)
+- Кеширование статических ассетов (`_astro/` — 1 год immutable)
+- Корректные MIME-типы для .webp, .woff2
+- Security headers (X-Frame-Options, X-Content-Type-Options)
+- SPA fallback не нужен (чистый SSG, одна страница)
 
-### Phase 3: Секции и взаимодействие (Tasks 5-7)
+#### Task 3: Добавить .dockerignore
+**Files:** `.dockerignore` (новый)
 
-**Task 5: Materials + Advantages** ✅
-- Download button tap target → 44px
-- `active:` variants для touch feedback
-- ScrollTrigger thresholds: 92%/90% → 85%
+Исключить из контекста сборки:
+- `node_modules/`, `.git/`, `dist/`
+- Скриншоты и изображения в корне (*.jpg, *.png, *.webp)
+- `.ai-factory/`, `.claude/`
 
-**Task 6: Geography + About** ✅
-- SVG labels: скрыть/увеличить на мобильных
-- Card padding: `p-5 sm:p-8`
-- SVG pulse оптимизация
+### Phase 2: Документация
 
-**Task 7: Lenis + GSAP mobile** ✅
-- `smoothTouch: false` или отключение Lenis на мобильных
-- `{ passive: true }` для всех scroll listeners
+#### Task 4: Обновить проектные документы
+**Files:** `.ai-factory/DESCRIPTION.md`, `CLAUDE.md`, `AGENTS.md`
 
-### Phase 4: Финал (Tasks 8-9)
+- DESCRIPTION.md: Deployment → Amvera Cloud
+- CLAUDE.md: Добавить секцию деплоя с инструкциями
+- AGENTS.md: Добавить amvera.yml и nginx.conf в ключевые файлы
 
-**Task 8: Footer + глобальные правки** ✅
-- `gap-6 md:gap-10`
-- Safe-area-insets
-- `{ passive: true }` на scroll listener
+Добавить пошаговую инструкцию GitHub-интеграции:
+1. Зарегистрироваться на amvera.ru
+2. Создать проект (тип: статический сайт)
+3. Подключить GitHub-репозиторий elfuerte72/TH_lando
+4. Выбрать ветку main для автодеплоя
+5. Привязать кастомный домен (при необходимости)
 
-**Task 9: Тестирование** *(blocked by 1-8)* ✅
-- Playwright тесты на viewport'ах: 360px, 375px, 390px, 768px
-- Landscape mode
-- Чек-лист из 12 пунктов
+---
 
-## Commit Plan
-
-| Checkpoint | Tasks | Commit message |
-|---|---|---|
-| 1 | Tasks 1-3 | `fix: resolve critical mobile layout overflow issues in hero, header, fleet` |
-| 2 | Task 4 | `perf: optimize images — convert to WebP, add srcset, remove unused assets` |
-| 3 | Tasks 5-7 | `fix: improve mobile UX — touch targets, scroll thresholds, Lenis config` |
-| 4 | Tasks 8-9 | `fix: footer mobile spacing, safe-area-insets, and mobile testing` |
+## Notes
+- Vercel можно оставить параллельно на время тестирования Amvera
+- SSL на Amvera предоставляется автоматически (Let's Encrypt)
+- Бесплатный тариф Amvera достаточен для статического лендинга

@@ -1,223 +1,104 @@
-# Architecture: Component-Based Static Site (Layered)
+# Architecture: Layered Architecture
 
 ## Overview
-Simple component-based architecture for a static landing page built with Astro SSG and Tailwind CSS. Each screen section is an independent Astro component composed into a single page. No runtime server, no database, no complex state management — just static HTML generation with minimal client-side JavaScript for interactivity (slider, animations, form submission).
-
-This is the simplest viable architecture for a one-page marketing site. Astro's island architecture handles the boundary between static content and interactive components naturally.
+Layered Architecture — простое разделение ответственности по горизонтальным слоям. Для статического одностраничного лендинга на Astro SSG это оптимальный выбор: проект не содержит серверной бизнес-логики, баз данных или сложных доменных моделей. Архитектура следует естественной иерархии Astro: страницы → компоненты → данные → типы.
 
 ## Decision Rationale
-- **Project type:** One-page landing (7 screens), no dynamic content
-- **Tech stack:** Astro SSG + Tailwind CSS + TypeScript
-- **Key factor:** Maximum simplicity — no business logic, no data layer, just presentation
-- **Team size:** 1 developer
-- **Scale:** Static site, CDN-served, no scaling concerns
+- **Project type:** Статический одностраничный лендинг (SSG)
+- **Tech stack:** Astro 6, TypeScript, Tailwind CSS v4, GSAP, Lenis
+- **Key factor:** Отсутствие серверной логики и базы данных — нет нужды в сложных паттернах
 
 ## Folder Structure
 ```
 src/
-├── pages/
-│   └── index.astro              # Single page, composes all sections
-├── components/
-│   ├── layout/
-│   │   ├── Header.astro         # Fixed navigation bar
-│   │   ├── Footer.astro         # Footer with copyright
-│   │   └── BaseLayout.astro     # HTML head, meta tags, global styles
-│   ├── sections/
-│   │   ├── Hero.astro           # Screen 1: video background, CTA
-│   │   ├── Fleet.astro          # Screen 2: vehicle cards slider/grid
-│   │   ├── Materials.astro      # Screen 3: transported materials grid
-│   │   ├── Advantages.astro     # Screen 4: stats counters + benefits
-│   │   ├── Geography.astro      # Screen 5: map + work locations
-│   │   ├── About.astro          # Screen 6: company info
-│   │   └── Contact.astro        # Screen 7: form + contact details
-│   ├── ui/
-│   │   ├── Button.astro         # Reusable button (primary, outline)
-│   │   ├── Card.astro           # Vehicle/material card
-│   │   ├── Counter.astro        # Animated number counter
-│   │   ├── Badge.astro          # License/info badge
-│   │   └── ScrollToTop.astro    # Back-to-top button
-│   └── icons/                   # SVG icon components
-│       └── *.astro
-├── scripts/
-│   ├── counter.ts               # Scroll-triggered counter animation
-│   ├── smooth-scroll.ts         # Smooth scroll for nav links
-│   └── form.ts                  # Telegram bot form submission
-├── styles/
-│   └── global.css               # Tailwind directives, custom properties
-├── data/
-│   ├── fleet.ts                 # Vehicle fleet data (typed)
-│   ├── materials.ts             # Materials data (typed)
-│   ├── locations.ts             # Geography points data
-│   └── stats.ts                 # Advantage numbers data
-└── types/
-    └── index.ts                 # Shared TypeScript interfaces
-public/
-├── images/
-│   ├── fleet/                   # Vehicle photos
-│   ├── materials/               # Material texture photos
-│   └── logo/                    # Logo variants (white, color)
-├── video/
-│   └── hero.mp4                 # Hero background video
-└── favicon.ico                  # TX favicon
+├── pages/                  # Presentation layer — точки входа (маршруты)
+│   └── index.astro         # Единственная страница, композиция секций
+├── components/             # UI layer — визуальные компоненты
+│   ├── layout/             # Структурные компоненты (Header, Footer)
+│   └── sections/           # Секции лендинга (Hero, Fleet, Materials, etc.)
+├── data/                   # Data layer — типизированные массивы данных
+│   ├── fleet.ts            # Данные автопарка
+│   ├── materials.ts        # Данные перевозимых материалов
+│   ├── locations.ts        # Данные географии
+│   └── stats.ts            # Навигация, контакты, преимущества
+├── types/                  # Type layer — TypeScript интерфейсы
+│   └── index.ts            # Все интерфейсы для data layer
+└── styles/                 # Cross-cutting — глобальные стили
+    └── global.css          # Tailwind v4 @theme токены, CSS-анимации
 ```
 
 ## Dependency Rules
+Зависимости идут строго сверху вниз:
 
-- ✅ `pages/` → imports `components/layout/` and `components/sections/`
-- ✅ `components/sections/` → imports `components/ui/`, `data/`, `types/`
-- ✅ `components/ui/` → imports `types/`, `components/icons/`
-- ✅ `scripts/` → standalone client-side modules, no server imports
-- ❌ `components/ui/` must NOT import `components/sections/` (no upward dependencies)
-- ❌ `data/` must NOT import components (data is pure typed objects)
-- ❌ No component should directly call external APIs — form submission goes through `scripts/form.ts`
+- ✅ `pages/` → `components/` → `data/` → `types/`
+- ✅ `styles/` используется всеми слоями (cross-cutting)
+- ✅ `components/sections/` импортируют данные из `data/`
+- ✅ `components/layout/` импортируют навигацию/контакты из `data/stats.ts`
+- ❌ `data/` НЕ импортирует из `components/`
+- ❌ `types/` НЕ импортирует ни из какого другого слоя
+- ❌ `components/sections/` НЕ импортируют друг друга напрямую
 
-## Layer Communication
-
-```
-index.astro (page)
-  └── BaseLayout.astro (layout wrapper)
-       ├── Header.astro (navigation)
-       ├── Hero.astro ──── hero.mp4 (public/)
-       ├── Fleet.astro ──── fleet.ts (data)
-       ├── Materials.astro ── materials.ts (data)
-       ├── Advantages.astro ── stats.ts (data) + counter.ts (script)
-       ├── Geography.astro ── locations.ts (data)
-       ├── About.astro
-       ├── Contact.astro ──── form.ts (script → Telegram API)
-       └── Footer.astro
-```
-
-- **Static content:** Rendered at build time by Astro (zero JS shipped)
-- **Interactive islands:** Counter animations, form submission, slider — use `<script>` tags or `client:visible` directive for deferred loading
+## Layer/Module Communication
+- **Pages → Components:** Astro-импорт компонентов, композиция в разметке
+- **Components → Data:** Прямой ES-импорт типизированных массивов
+- **Data → Types:** Импорт интерфейсов для типизации экспортов
+- **Между секциями:** Общение только через shared data (`stats.ts`), не через прямые импорты
 
 ## Key Principles
 
-1. **Data separate from presentation** — All content (fleet specs, materials, stats) lives in `src/data/` as typed TypeScript objects. Components render data, they don't define it. This makes content updates trivial.
+1. **Самодостаточность секций** — каждый `.astro` компонент в `sections/` содержит разметку, стили и `<script>` логику в одном файле. Нет разделения на отдельные файлы стилей или скриптов.
 
-2. **Section independence** — Each section component is self-contained. It receives no props from other sections, fetches its own data from `src/data/`. Sections can be reordered or removed without breaking others.
+2. **Данные отделены от представления** — все контентные данные живут в `src/data/` с типизацией из `src/types/`. Компоненты не содержат хардкод данных.
 
-3. **Minimal client JS** — Astro ships zero JS by default. Only add client-side scripts for: counter animation (Intersection Observer), form submission (fetch to Telegram API), smooth scroll. No framework runtime on the client.
+3. **Две системы анимаций** — CSS-only для простых эффектов (fade-in, parallax), GSAP ScrollTrigger для сложных (каунтеры, карусель, staggered entrance). Не смешивать: один элемент — одна система.
 
-4. **Design tokens in Tailwind config** — Colors (#111827, #1D7ACC, etc.) defined once in `tailwind.config.ts` as named tokens. Components use semantic names (`bg-dark`, `text-accent`, `bg-card`), never raw hex values.
+4. **Build-time vs Client-side** — SVG-карта в Geography рендерится при сборке через `node:fs`. Остальной JS — клиентский через `<script>` теги. Lenis ↔ GSAP синхронизация инициализируется в `index.astro`.
 
-5. **Mobile-first responsive** — All components designed mobile-first with Tailwind breakpoints (`md:`, `lg:`). Grid layouts collapse to single column on mobile.
+5. **Design tokens через CSS Custom Properties** — цвета, шрифты и т.д. определены в `@theme` блоке `global.css`. Использовать `var(--color-accent)` вместо хардкод hex-значений.
 
 ## Code Examples
 
-### Section component with typed data
+### Типичный компонент секции
 ```astro
 ---
-// src/components/sections/Fleet.astro
-import { fleet } from '../../data/fleet';
-import Card from '../ui/Card.astro';
+// src/components/sections/Example.astro
+import type { ExampleItem } from '@/types';
+import { exampleData } from '@/data/example';
 ---
 
-<section id="fleet" class="py-20 bg-dark">
-  <div class="container mx-auto px-4">
-    <h2 class="text-4xl font-bold text-white mb-4">НАШ АВТОПАРК</h2>
-    <p class="text-gray-sub mb-12">
-      11 единиц техники. Все — полный привод 6×6.
-    </p>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {fleet.map((vehicle) => (
-        <Card
-          name={vehicle.name}
-          year={vehicle.year}
-          capacity={vehicle.capacity}
-          volume={vehicle.volume}
-          drive={vehicle.drive}
-          count={vehicle.count}
-          image={vehicle.image}
-        />
-      ))}
-    </div>
-  </div>
+<section id="example" class="py-20 bg-[var(--color-bg)]">
+  {exampleData.map((item: ExampleItem) => (
+    <div class="text-[var(--color-accent)]">{item.title}</div>
+  ))}
 </section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Анимация привязана к секции — self-contained
+  gsap.from('#example .item', {
+    scrollTrigger: { trigger: '#example', start: 'top 80%' },
+    y: 40, opacity: 0, stagger: 0.1
+  });
+</script>
 ```
 
-### Typed data file
+### Типичный файл данных
 ```typescript
-// src/data/fleet.ts
-import type { Vehicle } from '../types';
+// src/data/example.ts
+import type { ExampleItem } from '@/types';
 
-export const fleet: Vehicle[] = [
-  {
-    name: 'SHACMAN X3000',
-    year: '2022–2023',
-    capacity: 30,
-    volume: 19,
-    drive: '6×6',
-    count: 6,
-    image: '/images/fleet/shacman-x3000.webp',
-  },
-  // ... more vehicles
+export const exampleData: ExampleItem[] = [
+  { id: 1, title: 'Заголовок', description: 'Описание' },
 ];
 ```
 
-### Client-side script (counter animation)
-```typescript
-// src/scripts/counter.ts
-const counters = document.querySelectorAll('[data-counter]');
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (!entry.isIntersecting) return;
-    const el = entry.target as HTMLElement;
-    const target = parseInt(el.dataset.counter!, 10);
-    animateCounter(el, target);
-    observer.unobserve(el);
-  });
-}, { threshold: 0.5 });
-
-counters.forEach((el) => observer.observe(el));
-
-function animateCounter(el: HTMLElement, target: number) {
-  let current = 0;
-  const step = Math.ceil(target / 60);
-  const interval = setInterval(() => {
-    current = Math.min(current + step, target);
-    el.textContent = current.toString();
-    if (current >= target) clearInterval(interval);
-  }, 16);
-}
-```
-
-### Form submission to Telegram
-```typescript
-// src/scripts/form.ts
-const TELEGRAM_BOT_TOKEN = import.meta.env.PUBLIC_TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = import.meta.env.PUBLIC_TELEGRAM_CHAT_ID;
-
-async function submitForm(data: FormData): Promise<boolean> {
-  const name = data.get('name') as string;
-  const phone = data.get('phone') as string;
-  const cargo = data.get('cargo') as string;
-  const comment = data.get('comment') as string;
-
-  const text = [
-    '📋 Новая заявка с сайта',
-    `👤 Имя: ${name}`,
-    `📞 Телефон: ${phone}`,
-    `📦 Груз: ${cargo}`,
-    comment ? `💬 Комментарий: ${comment}` : '',
-  ].filter(Boolean).join('\n');
-
-  const res = await fetch(
-    `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text, parse_mode: 'HTML' }),
-    }
-  );
-  return res.ok;
-}
-```
-
 ## Anti-Patterns
-
-- ❌ **Don't use React/Vue islands unless truly needed** — Astro components handle most interactivity. Only use framework islands for complex stateful widgets (e.g., an interactive map component)
-- ❌ **Don't put content text directly in components** — Keep all translatable/editable content in `src/data/` files for easy updates
-- ❌ **Don't use `client:load` everywhere** — Prefer `client:visible` or `client:idle` to avoid blocking page load with unnecessary JS
-- ❌ **Don't hardcode colors** — Use Tailwind theme tokens, not raw hex values in components
-- ❌ **Don't skip image optimization** — Use Astro's `<Image>` component or pre-optimized WebP images in `public/`
+- ❌ **Импорт между секциями** — секции не должны зависеть друг от друга; общие данные через `data/`
+- ❌ **GSAP + CSS анимация на одном элементе** — конфликтует; выбирать одну систему
+- ❌ **Transform на `<section>`** — вызывает субпиксельные щели при скролле (задокументировано в CLAUDE.md)
+- ❌ **Хардкод цветов** — использовать CSS custom properties из `global.css`
+- ❌ **`client:` директивы** — проект использует `<script>` теги, не island-архитектуру
+- ❌ **Данные в компонентах** — весь контент должен быть в `src/data/` с типами из `src/types/`

@@ -1,0 +1,19 @@
+node_modules/
+dist/
+.git/
+
+# AI/dev tooling
+.ai-factory/
+.claude/
+.mcp.json
+AGENTS.md
+CLAUDE.md
+
+# Screenshots and media in root
+*.png
+*.jpg
+*.webp
+Screenshot*
+
+# OS files
+.DS_Store

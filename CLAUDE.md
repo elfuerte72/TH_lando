@@ -17,7 +17,7 @@ No test framework or linter is configured.
 
 ## Architecture
 
-Astro 6 static site (SSG) with Tailwind CSS v4, GSAP animations, and Lenis smooth scroll. Deploys to Vercel.
+Astro 6 static site (SSG) with Tailwind CSS v4, GSAP animations, and Lenis smooth scroll. Deploys to Amvera Cloud.
 
 ### Page composition
 
@@ -59,9 +59,24 @@ Lenis ↔ GSAP sync is critical: `lenis.on('scroll', ScrollTrigger.update)` + `g
 
 **IntersectionObserver** is used only in `Header.astro` for active nav link highlighting. Do not apply `transform`-based scroll reveals to `<section>` elements — this causes subpixel gaps between sections visible as flickering lines during scroll.
 
-### Vercel deployment
+### Amvera Cloud deployment
 
-Static output deployed to Vercel. No server-side functions. `vite.server.allowedHosts: true` is set in `astro.config.ts` for ngrok/tunnel compatibility.
+Static output deployed to Amvera Cloud (amvera.ru) via Docker multi-stage build (Node.js 20 → nginx). Configuration files:
+- `amvera.yml` — Amvera project config (points to Dockerfile)
+- `Dockerfile` — multi-stage: build with Node.js, serve with nginx
+- `nginx.conf` — custom nginx config (gzip, caching, security headers)
+- `.dockerignore` — excludes dev/AI files from build context
+
+Auto-deploy from GitHub: connect repo `elfuerte72/TH_lando`, branch `main` in Amvera dashboard.
+
+`vite.server.allowedHosts: true` is set in `astro.config.ts` for ngrok/tunnel compatibility.
+
+#### Amvera setup steps
+1. Зарегистрироваться на amvera.ru
+2. Создать проект (тип: приложение)
+3. Подключить GitHub-репозиторий elfuerte72/TH_lando
+4. Выбрать ветку main для автодеплоя
+5. Привязать кастомный домен (при необходимости)
 
 ### Geography section: build-time SVG
 
