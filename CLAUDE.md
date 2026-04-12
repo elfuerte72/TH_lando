@@ -86,9 +86,9 @@ Deploy via git push: `git push amvera main:master` (remote: `https://git.msk0.am
 
 Hero section loads video from Vercel Blob Storage (external CDN) with automatic fallback to local `/video/truck-compressed-28.mp4` if external source fails or takes >8s. Video is created dynamically via JS only on desktop (not on mobile). Poster image: `/video/truck-poster.jpg`.
 
-### Geography section: build-time SVG
+### Geography section: Yandex Maps
 
-`Geography.astro` reads `russia-new.svg` from the project root at build time via `node:fs` and renders an inline SVG map with computed city marker positions using an affine geo→SVG projection. This runs only during SSG build, not client-side.
+`Geography.astro` loads Yandex Maps API 2.1 client-side to render an interactive map with location markers. Locations come from `src/data/locations.ts`. The API key is passed via `PUBLIC_YANDEX_MAPS_KEY` env var. Sidebar contains a highlighted "Ковыктинское месторождение" card and a "Наши Партнёры" grid.
 
 ## Key conventions
 
