@@ -41,19 +41,17 @@ const sectorIcons: Record<string, string> = {
         ></div>
       </div>
 
-      <!-- Sidebar -->
-      <div class="lg:col-span-2 space-y-6">
+      <!-- Sidebar — stretch to match map height -->
+      <div class="lg:col-span-2 flex flex-col gap-4 lg:h-[500px]">
         <!-- New Direction Banner -->
-        <div class="relative bg-gradient-to-br from-accent to-accent/80 rounded-2xl p-5 sm:p-8 text-white overflow-hidden group">
-          <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-          <div class="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+        <div class="relative bg-gradient-to-br from-accent to-accent/80 rounded-2xl p-5 sm:p-6 text-white overflow-hidden group">
           <div class="relative">
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-white/15 backdrop-blur-sm rounded-full mb-5">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-yellow-400/90 text-black rounded-full mb-4 shadow-[0_0_14px_rgba(250,204,21,0.5),0_0_28px_rgba(250,204,21,0.25)]">
               <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-600 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-600"></span>
               </span>
-              <span class="font-semibold uppercase text-xs tracking-wider">Новое направление</span>
+              <span class="font-bold uppercase text-xs tracking-wider">Новое направление</span>
             </div>
             <h3 class="text-xl lg:text-2xl font-black mb-3 leading-tight">Ковыктинское<br/>месторождение</h3>
             <div class="w-10 h-px bg-white/30 mb-3"></div>
@@ -64,12 +62,12 @@ const sectorIcons: Record<string, string> = {
         </div>
 
         <!-- Sectors -->
-        <div class="bg-card border border-white/5 rounded-2xl p-5 sm:p-8">
-          <div class="flex items-center gap-3 mb-6">
+        <div class="bg-card border border-white/5 rounded-2xl p-5 sm:p-6 flex-1 flex flex-col">
+          <div class="flex items-center gap-3 mb-4">
             <div class="w-1 h-6 bg-accent rounded-full"></div>
             <h3 class="text-lg font-bold uppercase tracking-wide">Наши Партнеры</h3>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 content-center">
             {sectors.map((sector) => (
               <div class="geo-sector-card flex items-center gap-3 p-3 rounded-xl border border-white/5 bg-dark/40 hover:border-accent/30 hover:bg-accent/5 transition-all duration-300 min-w-0">
                 <div class="w-9 h-9 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
