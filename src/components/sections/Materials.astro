@@ -46,20 +46,20 @@ import { materials } from '@/data/materials';
             <img
               src={material.image}
               alt={material.name}
-              class="w-full h-full object-cover sm:transition-transform sm:duration-700 sm:group-hover:scale-110"
+              class="w-full h-full object-cover brightness-[0.45] sm:transition-all sm:duration-700 sm:group-hover:scale-110 sm:group-hover:brightness-[0.55]"
               loading="lazy"
               decoding="async"
             />
             <!-- Minimal overlay only at bottom for text readability -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/10"></div>
             <!-- Accent tint on hover -->
             <div class="absolute inset-0 bg-accent/0 group-hover:bg-accent/[0.06] transition-all duration-500"></div>
           </div>
 
           <!-- Content overlay -->
           <div class="relative h-full flex flex-col justify-end p-4 lg:p-5">
-            <h3 class="text-base lg:text-lg font-bold text-white mb-0.5 " style="text-shadow: 0 1px 4px rgba(0,0,0,0.8);">{material.name}</h3>
-            <p class="text-gray-200 text-sm leading-relaxed" style="text-shadow: 0 1px 4px rgba(0,0,0,0.9);">{material.description}</p>
+            <h3 class="text-base lg:text-lg font-bold text-white mb-0.5" style="text-shadow: 0 1px 6px rgba(0,0,0,1), 0 0 12px rgba(0,0,0,0.7);">{material.name}</h3>
+            <p class="text-white/90 text-sm font-medium leading-relaxed" style="text-shadow: 0 1px 6px rgba(0,0,0,1), 0 0 12px rgba(0,0,0,0.7);">{material.description}</p>
           </div>
 
           <!-- Corner accent line -->

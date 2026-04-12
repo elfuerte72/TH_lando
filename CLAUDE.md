@@ -9,7 +9,7 @@ One-page landing site for Trak Holding (bulk cargo transportation, Russia). Dark
 ## Commands
 
 - `npm run dev` — dev server at localhost:4321
-- `npm run build` — production build to `dist/`
+- `npm run build` — production build to `dist/` (includes `postbuild-css.mjs` for older browser CSS compat)
 - `npm run preview` — preview production build
 - `npm run check` — TypeScript checking via `astro check`
 
@@ -36,11 +36,15 @@ Typed data arrays in `src/data/` (fleet, materials, locations, stats) with inter
 Astro components use `<script>` tags (not `client:` directives) for:
 - GSAP ScrollTrigger animations and counters
 - Fleet carousel with keyboard/touch controls
-- Lenis smooth scrolling (initialized in `index.astro`)
+- Lenis smooth scrolling (initialized in `index.astro`) — **disabled on mobile** (≤767px) due to scroll jank; mobile uses native `scrollIntoView({ behavior: 'smooth' })` instead
 
 ### Styling
 
-Tailwind v4 integrated via `@tailwindcss/vite` plugin in `astro.config.ts`. Design tokens defined as CSS custom properties in `src/styles/global.css`:
+Tailwind v4 integrated via `@tailwindcss/postcss` in `postcss.config.mjs` (not the Vite plugin). PostCSS pipeline: `tailwindcss()` → `unwrapLayer()` → `compat()` → `autoprefixer()`. The custom plugins (`postcss-unwrap-layer.mjs`, `postcss-compat.mjs`) handle CSS compatibility transformations.
+
+Post-build step (`scripts/postbuild-css.mjs`) uses Lightning CSS to downgrade modern CSS (oklch, color-mix, @property) for older browsers. Targets: Chrome ≥80, Safari ≥13, Firefox ≥80.
+
+Design tokens defined as CSS custom properties in `src/styles/global.css`:
 - Background: `#0a0a0d`, accent: `#1D7ACC`
 - Fonts: Barlow Condensed (headings), Inter (body)
 - Custom keyframe animations (fade-in, slide-up, pulse-glow, grain)
@@ -61,13 +65,13 @@ Lenis ↔ GSAP sync is critical: `lenis.on('scroll', ScrollTrigger.update)` + `g
 
 ### Amvera Cloud deployment
 
-Static output deployed to Amvera Cloud (amvera.ru) via Docker multi-stage build (Node.js 20 → nginx). Configuration files:
+Static output deployed to Amvera Cloud (amvera.ru) via Docker multi-stage build (Node.js 22 → nginx). Configuration files:
 - `amvera.yml` — Amvera project config (points to Dockerfile)
 - `Dockerfile` — multi-stage: build with Node.js, serve with nginx
 - `nginx.conf` — custom nginx config (gzip, caching, security headers)
 - `.dockerignore` — excludes dev/AI files from build context
 
-Auto-deploy from GitHub: connect repo `elfuerte72/TH_lando`, branch `main` in Amvera dashboard.
+Deploy via git push: `git push amvera main:master` (remote: `https://git.msk0.amvera.ru/mxpkns/trak-holding`). Can also connect GitHub webhook for auto-deploy from `main`.
 
 `vite.server.allowedHosts: true` is set in `astro.config.ts` for ngrok/tunnel compatibility.
 
@@ -77,6 +81,10 @@ Auto-deploy from GitHub: connect repo `elfuerte72/TH_lando`, branch `main` in Am
 3. Подключить GitHub-репозиторий elfuerte72/TH_lando
 4. Выбрать ветку main для автодеплоя
 5. Привязать кастомный домен (при необходимости)
+
+### Hero video
+
+Hero section loads video from Vercel Blob Storage (external CDN) with automatic fallback to local `/video/truck-compressed-28.mp4` if external source fails or takes >8s. Video is created dynamically via JS only on desktop (not on mobile). Poster image: `/video/truck-poster.jpg`.
 
 ### Geography section: build-time SVG
 
@@ -91,3 +99,10 @@ Auto-deploy from GitHub: connect repo `elfuerte72/TH_lando`, branch `main` in Am
 - Tailwind v4 design tokens defined in `@theme` block in `global.css` — use these variables (e.g., `var(--color-accent)`) rather than hardcoding hex values
 - Each section component is self-contained: markup, styles, and `<script>` logic in one `.astro` file
 - Project context and plans live in `.ai-factory/`
+- Vite 7 is pinned via `overrides` in `package.json`
+
+### Environment variables
+
+Defined in `.env` (see `.env.example`):
+- `PUBLIC_TELEGRAM_BOT_TOKEN` / `PUBLIC_TELEGRAM_CHAT_ID` — contact form sends messages via Telegram bot
+- `PUBLIC_YANDEX_MAPS_KEY` — Yandex Maps API key for the geography section

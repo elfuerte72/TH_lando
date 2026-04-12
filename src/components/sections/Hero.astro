@@ -2,8 +2,8 @@
 ---
 
 <section id="hero" class="relative min-h-[100dvh] min-h-[100vh] flex items-center overflow-hidden">
-  <!-- Video Background — poster as CSS bg fallback (avoids iOS native play button) -->
-  <div id="hero-bg" class="absolute inset-0 bg-cover bg-center" style="background-image: url('/video/truck-poster.jpg');"></div>
+  <!-- Video Background — poster only on desktop (video is desktop-only) -->
+  <div id="hero-bg" class="absolute inset-0 bg-cover bg-center hidden md:block" style="background-image: url('/video/truck-poster.jpg');"></div>
 
   <!-- Cinematic overlays — strong left side so text always readable -->
   <div class="absolute inset-0 bg-gradient-to-b from-dark/60 via-dark/15 to-dark z-[1]"></div>
