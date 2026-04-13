@@ -82,14 +82,7 @@
       video.className = 'hero-video absolute inset-0 w-full h-full object-cover';
       bg.appendChild(video);
 
-      // External (Vercel Blob) with local fallback
-      const externalSrc = 'https://1kq9ppdwucmvl2un.public.blob.vercel-storage.com/truck-compressed-28.mp4';
-      const localSrc = '/video/truck-compressed-28.mp4';
-
-      const source = document.createElement('source');
-      source.src = externalSrc;
-      source.type = 'video/mp4';
-      video.appendChild(source);
+      video.src = '/video/truck-compressed-28.mp4';
 
       function tryPlay() {
         video.muted = true;
@@ -97,27 +90,6 @@
       }
 
       video.addEventListener('canplay', tryPlay, { once: true });
-
-      // Fallback: if external video fails to load, try local
-      video.addEventListener('error', () => {
-        video.src = localSrc;
-        video.load();
-      }, { once: true });
-
-      source.addEventListener('error', () => {
-        video.src = localSrc;
-        video.load();
-      }, { once: true });
-
-      // Timeout fallback: if video hasn't started in 8s, try local
-      const fallbackTimer = setTimeout(() => {
-        if (video.readyState < 2) {
-          video.src = localSrc;
-          video.load();
-        }
-      }, 8000);
-
-      video.addEventListener('canplay', () => clearTimeout(fallbackTimer), { once: true });
 
       function onGesture() {
         tryPlay();

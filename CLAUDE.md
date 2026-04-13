@@ -84,7 +84,7 @@ Deploy via git push: `git push amvera main:master` (remote: `https://git.msk0.am
 
 ### Hero video
 
-Hero section loads video from Vercel Blob Storage (external CDN) with automatic fallback to local `/video/truck-compressed-28.mp4` if external source fails or takes >8s. Video is created dynamically via JS only on desktop (not on mobile). Poster image: `/video/truck-poster.jpg`.
+Hero section loads video from local `/video/truck-compressed-28.mp4` (~10 MB, served via nginx). Video element is created dynamically via JS only on desktop (not on mobile). Poster image: `/video/truck-poster.webp`.
 
 ### Geography section: Yandex Maps
 
