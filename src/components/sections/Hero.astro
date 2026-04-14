@@ -84,6 +84,11 @@
 
       video.src = '/video/truck-compressed-28.mp4';
 
+      video.addEventListener('error', () => {
+        const e = video.error;
+        console.warn('Hero video error:', e ? `code=${e.code} ${e.message}` : 'unknown');
+      });
+
       function tryPlay() {
         video.muted = true;
         video.play().catch(() => {});
