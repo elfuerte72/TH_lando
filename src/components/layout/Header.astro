@@ -8,7 +8,7 @@ import { navigation, contactInfo } from '@/data/stats';
     <div class="max-w-[var(--container-max-width)] mx-auto px-4 sm:px-6 lg:px-8">
       <div class="header-inner flex items-center justify-between">
         <!-- Logo -->
-        <a href="#" class="flex items-center gap-2.5 shrink-0 group">
+        <a href="/" class="flex items-center gap-2.5 shrink-0 group">
           <img src="/images/logo-th.webp" alt="Трак Холдинг" class="h-6 lg:h-7 w-auto transition-opacity duration-300 group-hover:opacity-80" />
           <span class="text-white font-heading font-bold text-[13px] lg:text-sm tracking-[0.15em] uppercase">ТРАК ХОЛДИНГ</span>
         </a>
@@ -177,7 +177,8 @@ import { navigation, contactInfo } from '@/data/stats';
       if (entry.isIntersecting) {
         const id = entry.target.id;
         navLinks.forEach(link => {
-          link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+          const href = link.getAttribute('href');
+          link.classList.toggle('active', href === `#${id}` || href === `/#${id}`);
         });
       }
     });

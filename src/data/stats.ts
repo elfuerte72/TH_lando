@@ -25,9 +25,9 @@ export const contactInfo = {
 };
 
 export const navigation = [
-  { label: 'Автопарк', href: '#fleet' },
-  { label: 'Услуги', href: '#materials' },
-  { label: 'Преимущества', href: '#advantages' },
-  { label: 'Портфолио', href: '#geography' },
-  { label: 'О компании', href: '#about' },
+  { label: 'Автопарк', href: '/#fleet' },
+  { label: 'Услуги', href: '/#materials' },
+  { label: 'Преимущества', href: '/#advantages' },
+  { label: 'Портфолио', href: '/#geography' },
+  { label: 'О компании', href: '/#about' },
 ];
